@@ -1,7 +1,9 @@
 package com.payMyBuddy.payMyBuddy.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "SenderRecipientConnection")
 public class SenderRecipientConnection {
@@ -9,7 +11,7 @@ public class SenderRecipientConnection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Long id;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idSender", referencedColumnName = "id")

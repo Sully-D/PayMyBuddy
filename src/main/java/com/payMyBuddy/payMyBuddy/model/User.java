@@ -3,9 +3,13 @@ package com.payMyBuddy.payMyBuddy.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
+@Data
+@Builder
 @Entity
 @Table(name = "User")
 public class User {
@@ -13,7 +17,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Long id;
 
     @Column(name = "email", nullable = false, unique = true, length = 50)
     @NotNull(message = "email can't null")
