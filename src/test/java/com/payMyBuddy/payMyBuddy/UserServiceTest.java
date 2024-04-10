@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.math.BigDecimal;
 
 @SpringBootTest
 public class UserServiceTest {
@@ -25,16 +24,9 @@ public class UserServiceTest {
     @Test
     public void createNewUser() {
         // Given
-        User user1 = User.builder()
-                .email("john.doe@test.com")
-                .password("Azerty123")
-                .lastName("John")
-                .firstName("Doe")
-                .balance(BigDecimal.valueOf(100.00))
-                .build();
 
         // When
-        userService.createUser(user1);
+        userService.createUser("john.doe@test.com", "Azerty123", "John", "Doe");
 
         // Then
         verify(userRepository).save(any(User.class));
