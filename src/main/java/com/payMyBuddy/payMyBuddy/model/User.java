@@ -1,7 +1,6 @@
 package com.payMyBuddy.payMyBuddy.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
@@ -35,8 +34,8 @@ public class User {
     @NotNull(message = "firstName can't null")
     private String firstName;
 
-    @Column(name = "balance", nullable = false, precision = 10, scale = 2)
+    @Column(name = "balance", nullable = false, precision = 10, scale = 2,
+            columnDefinition = "DECIMAL(10,2) DEFAULT '0.00'")
     @NotNull(message = "balance can't null")
-    //@DecimalMin("0.00")
     private BigDecimal balance;
 }
