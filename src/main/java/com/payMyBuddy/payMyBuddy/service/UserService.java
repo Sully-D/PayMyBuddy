@@ -3,6 +3,8 @@ package com.payMyBuddy.payMyBuddy.service;
 import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
 import com.payMyBuddy.payMyBuddy.model.User;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
+import com.payMyBuddy.payMyBuddy.util.Utils;
+import jdk.jshell.execution.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,13 @@ public class UserService {
 
         logger.info("Start UserService.createUser()");
 
+        Utils.checkArguments(email, "Email");
+        Utils.checkArguments(rawPassword, "Password");
+        Utils.checkArguments(lastName, "LastName");
+        Utils.checkArguments(firstName, "FirstName");
+
+        Utils.checkEmailFormat(email);
+
         Optional<User> existingUser = userRepository.findByEmail(email);
         if (existingUser.isPresent()) {
             throw new UserAlreadyExistsException("A user with this email already exists : " + email);
@@ -39,7 +48,7 @@ public class UserService {
                 .firstName(firstName)
                 .build();
 
-        logger.info("NEW USER SAVED");
+        logger.info("New user saved");
         userRepository.save(user);
     }
 }

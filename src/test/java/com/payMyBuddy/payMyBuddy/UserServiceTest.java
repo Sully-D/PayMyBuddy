@@ -3,8 +3,7 @@ package com.payMyBuddy.payMyBuddy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
 import com.payMyBuddy.payMyBuddy.model.User;
@@ -53,5 +52,21 @@ public class UserServiceTest {
         // When & Then
         assertThrows(UserAlreadyExistsException.class, () -> userService.createUser("john.doe@test.com",
                 "Azerty123", "John", "Doe"));
+    }
+
+    @Test
+    public void createUser_whenInvalidEntry() {
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("",
+                "", "", ""));
+
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    public void createUser_whenInvalidEmailFormat() {
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("john.doe@testcom",
+                "Azerty123", "John", "Doe"));
+
+        verify(userRepository, never()).save(any(User.class));
     }
 }
