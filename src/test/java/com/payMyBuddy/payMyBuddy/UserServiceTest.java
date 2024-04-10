@@ -1,8 +1,12 @@
 package com.payMyBuddy.payMyBuddy;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
 import com.payMyBuddy.payMyBuddy.model.User;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.service.UserService;
@@ -10,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.util.Optional;
 
 
 @SpringBootTest
@@ -30,5 +36,22 @@ public class UserServiceTest {
 
         // Then
         verify(userRepository).save(any(User.class));
+    }
+
+    @Test
+    public void createUser_whenUserAlreadyExist() {
+        // Given
+        User existingUser = User.builder()
+                .email("john.doe@test.com")
+                .password("Azerty123")
+                .lastName("Doe")
+                .firstName("John")
+                .build();
+
+        when(userRepository.findByEmail("john.doe@test.com")).thenReturn(Optional.of(existingUser));
+
+        // When & Then
+        assertThrows(UserAlreadyExistsException.class, () -> userService.createUser("john.doe@test.com",
+                "Azerty123", "John", "Doe"));
     }
 }
