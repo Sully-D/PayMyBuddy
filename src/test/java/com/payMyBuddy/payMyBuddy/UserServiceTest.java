@@ -55,9 +55,17 @@ public class UserServiceTest {
     }
 
     @Test
-    public void createUser_whenInvalidEntry() {
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser("",
-                "", "", ""));
+    public void createUser_whenEmptyEntry() {
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("john.doe@test.com",
+                "Azerty123", "", ""));
+
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    public void createUser_whenNullEntry() {
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser("john.doe@test.com",
+                "Azerty123", null, ""));
 
         verify(userRepository, never()).save(any(User.class));
     }
