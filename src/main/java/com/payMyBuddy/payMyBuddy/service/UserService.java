@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -23,27 +24,34 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void createUser(UserAccount userAccount) {
+    public void createUser(UserAccount newUser) {
 
         logger.info("Start UserService.createUser()");
 
-        Utils.checkArguments(userAccount.getEmail(), "Email");
-        Utils.checkArguments(userAccount.getPassword(), "Password");
-        Utils.checkArguments(userAccount.getLastName(), "LastName");
-        Utils.checkArguments(userAccount.getFirstName(), "FirstName");
-        Utils.checkArguments(userAccount.getBalance(), "Balance");
+        Utils.checkArguments(newUser.getEmail(), "Email");
+        Utils.checkArguments(newUser.getPassword(), "Password");
+        Utils.checkArguments(newUser.getLastName(), "LastName");
+        Utils.checkArguments(newUser.getFirstName(), "FirstName");
+        Utils.checkArguments(newUser.getBalance(), "Balance");
 
-        Utils.checkEmailFormat(userAccount.getEmail());
+        Utils.checkEmailFormat(newUser.getEmail());
 
-        Optional<UserAccount> existingUser = userRepository.findByEmail(userAccount.getEmail());
+        Optional<UserAccount> existingUser = userRepository.findByEmail(newUser.getEmail());
         if (existingUser.isPresent()) {
-            throw new UserAlreadyExistsException("A user with this email already exists : " + userAccount.getEmail());
+            throw new UserAlreadyExistsException("A user with this email already exists : " + newUser.getEmail());
         }
 
         // Hash password
-        userAccount.setPassword(bCryptPasswordEncoder.encode(userAccount.getPassword()));
+        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+        UserAccount saveUser = UserAccount.builder()
+                .email(newUser.getEmail())
+                .password(bCryptPasswordEncoder.encode(newUser.getPassword()))
+                .lastName(newUser.getLastName())
+                .firstName(newUser.getFirstName())
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
 
         logger.info("New user saved");
-        userRepository.save(userAccount);
+        userRepository.save(saveUser);
     }
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "SenderRecipientConnection")
+@Table(name = "sender_recipient_connection")
 public class SenderRecipientConnection {
 
     @Id

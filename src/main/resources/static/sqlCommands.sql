@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS db_payMyBuddy;
 USE db_payMyBuddy;
 
-CREATE TABLE UserAccount (
+CREATE TABLE user_account (
     id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE UserAccount (
     balance DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE SenderRecipientConnection (
+CREATE TABLE sender_recipient_connection (
     id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     idSender INT NOT NULL,
     idRecipient INT NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE SenderRecipientConnection (
     FOREIGN KEY (idRecipient) REFERENCES User(id)
 );
 
-CREATE TABLE Transaction (
+CREATE TABLE transaction (
     id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     idSender INT NOT NULL,
     idRecipient INT NOT NULL,
