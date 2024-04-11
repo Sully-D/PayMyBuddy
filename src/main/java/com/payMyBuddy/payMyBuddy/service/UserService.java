@@ -31,6 +31,7 @@ public class UserService {
         Utils.checkArguments(userAccount.getPassword(), "Password");
         Utils.checkArguments(userAccount.getLastName(), "LastName");
         Utils.checkArguments(userAccount.getFirstName(), "FirstName");
+        Utils.checkArguments(userAccount.getBalance(), "Balance");
 
         Utils.checkEmailFormat(userAccount.getEmail());
 

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 
@@ -34,6 +35,7 @@ public class UserAccountServiceTest {
                 .password("Azerty123")
                 .lastName("Doe")
                 .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
                 .build();
 
         // When
@@ -51,6 +53,7 @@ public class UserAccountServiceTest {
                 .password("Azerty123")
                 .lastName("Doe")
                 .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
                 .build();
 
         when(userRepository.findByEmail("john.doe@test.com")).thenReturn(Optional.of(existingUserAccount));
@@ -60,6 +63,7 @@ public class UserAccountServiceTest {
                 .password("Azerty123")
                 .lastName("Doe")
                 .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
                 .build();
 
         // When & Then
@@ -73,6 +77,7 @@ public class UserAccountServiceTest {
                 .password("Azerty123")
                 .lastName("")
                 .firstName("")
+                .balance(BigDecimal.valueOf(0.00))
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(newUserAccount));
@@ -87,6 +92,7 @@ public class UserAccountServiceTest {
                 .password("Azerty123")
                 .lastName(null)
                 .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
                 .build();
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(newUserAccount));
 
@@ -100,6 +106,7 @@ public class UserAccountServiceTest {
                 .password("Azerty123")
                 .lastName("Doe")
                 .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(newUserAccount));
