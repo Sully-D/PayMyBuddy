@@ -1,13 +1,11 @@
 package com.payMyBuddy.payMyBuddy.service;
 
 import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
-import com.payMyBuddy.payMyBuddy.model.User;
+import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.util.Utils;
-import jdk.jshell.execution.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,39 +14,35 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
-    UserRepository userRepository;
-
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public void createUser(String email, String rawPassword, String lastName, String firstName) {
+    public UserService(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userRepository = userRepository;
+    }
+
+    public void createUser(UserAccount userAccount) {
 
         logger.info("Start UserService.createUser()");
 
-        Utils.checkArguments(email, "Email");
-        Utils.checkArguments(rawPassword, "Password");
-        Utils.checkArguments(lastName, "LastName");
-        Utils.checkArguments(firstName, "FirstName");
+        Utils.checkArguments(userAccount.getEmail(), "Email");
+        Utils.checkArguments(userAccount.getPassword(), "Password");
+        Utils.checkArguments(userAccount.getLastName(), "LastName");
+        Utils.checkArguments(userAccount.getFirstName(), "FirstName");
 
-        Utils.checkEmailFormat(email);
+        Utils.checkEmailFormat(userAccount.getEmail());
 
-        Optional<User> existingUser = userRepository.findByEmail(email);
+        Optional<UserAccount> existingUser = userRepository.findByEmail(userAccount.getEmail());
         if (existingUser.isPresent()) {
-            throw new UserAlreadyExistsException("A user with this email already exists : " + email);
+            throw new UserAlreadyExistsException("A user with this email already exists : " + userAccount.getEmail());
         }
 
-        User user = User.builder()
-                .email(email)
-                // Hash password
-                .password(bCryptPasswordEncoder.encode(rawPassword))
-                .lastName(lastName)
-                .firstName(firstName)
-                .build();
+        // Hash password
+        userAccount.setPassword(bCryptPasswordEncoder.encode(userAccount.getPassword()));
 
         logger.info("New user saved");
-        userRepository.save(user);
+        userRepository.save(userAccount);
     }
 }

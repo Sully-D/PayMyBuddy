@@ -15,9 +15,9 @@ public class SenderRecipientConnection {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idSender", referencedColumnName = "id")
-    private User sender;
+    private UserAccount sender;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idRecipient", referencedColumnName = "id")
-    private User recipient;
+    private UserAccount recipient;
 }

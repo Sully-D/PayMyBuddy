@@ -17,11 +17,11 @@ public class Transaction {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idSender", referencedColumnName = "id")
-    private User sender;
+    private UserAccount sender;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idRecipient", referencedColumnName = "id")
-    private User recipient;
+    private UserAccount recipient;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
