@@ -9,8 +9,6 @@ import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.service.UserService;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,7 +31,7 @@ public class UserAccountServiceTest {
         // Given
         UserAccount newUserAccount = UserAccount.builder()
                 .email("john.doe@test.com")
-                .password("Azerty123")
+                .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
@@ -51,7 +49,7 @@ public class UserAccountServiceTest {
         // Given
         UserAccount existingUserAccount = UserAccount.builder()
                 .email("john.doe@test.com")
-                .password("Azerty123")
+                .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
@@ -61,7 +59,7 @@ public class UserAccountServiceTest {
 
         UserAccount newUserAccount = UserAccount.builder()
                 .email("john.doe@test.com")
-                .password("Azerty123")
+                .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
@@ -75,7 +73,7 @@ public class UserAccountServiceTest {
     public void createUser_whenEmptyEntry() {
         UserAccount newUserAccount = UserAccount.builder()
                 .email("john.doe@test.com")
-                .password("Azerty123")
+                .password("Azerty123@")
                 .lastName("")
                 .firstName("")
                 .balance(BigDecimal.valueOf(0.00))
@@ -90,7 +88,7 @@ public class UserAccountServiceTest {
     public void createUser_whenNullEntry() {
         UserAccount newUserAccount = UserAccount.builder()
                 .email("john.doe@test.com")
-                .password("Azerty123")
+                .password("Azerty123@")
                 .lastName(null)
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
@@ -104,7 +102,22 @@ public class UserAccountServiceTest {
     public void createUser_whenInvalidEmailFormat() {
         UserAccount newUserAccount = UserAccount.builder()
                 .email("john.doe@testcom")
-                .password("Azerty123")
+                .password("Azerty123@")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
+
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser(newUserAccount));
+
+        verify(userRepository, never()).save(any(UserAccount.class));
+    }
+
+    @Test
+    public void createUser_whenInvalidPasswordFormat() {
+        UserAccount newUserAccount = UserAccount.builder()
+                .email("john.doe@testcom")
+                .password("Azerty")
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))

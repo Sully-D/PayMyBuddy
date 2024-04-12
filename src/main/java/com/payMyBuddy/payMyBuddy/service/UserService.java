@@ -35,6 +35,7 @@ public class UserService {
         Utils.checkArguments(newUser.getBalance(), "Balance");
 
         Utils.checkEmailFormat(newUser.getEmail());
+        Utils.checkPasswordFormat(newUser.getPassword());
 
         Optional<UserAccount> existingUser = userRepository.findByEmail(newUser.getEmail());
         if (existingUser.isPresent()) {

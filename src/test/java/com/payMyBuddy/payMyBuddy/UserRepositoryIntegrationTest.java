@@ -28,7 +28,7 @@ public class UserRepositoryIntegrationTest {
         // Given
         UserAccount newUser = UserAccount.builder()
                 .email("john.doe@testcom")
-                .password("Azerty123")
+                .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))

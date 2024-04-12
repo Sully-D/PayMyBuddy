@@ -39,7 +39,7 @@ public class UserServiceIntegrationTest {
 
         UserAccount newUser = UserAccount.builder()
                 .email("john.doe@test.com")
-                .password("Azerty123")
+                .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
@@ -49,7 +49,7 @@ public class UserServiceIntegrationTest {
         userService.createUser(newUser);
 
         // Then
-        assertNotEquals("Azerty123", newUser.getPassword(), "Password must be encrypted");
+        assertNotEquals("Azerty123@", newUser.getPassword(), "Password must be encrypted");
         assertTrue(newUser.getPassword().startsWith("hashed"), "The encrypted password must begin with 'hashed'.");
     }
 }

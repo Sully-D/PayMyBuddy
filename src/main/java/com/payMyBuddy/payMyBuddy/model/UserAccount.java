@@ -2,6 +2,7 @@ package com.payMyBuddy.payMyBuddy.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Data;
 
@@ -24,6 +25,9 @@ public class UserAccount {
 
     @Column(name = "password", nullable = false, length = 255)
     @NotNull(message = "password can't null")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,24}$",
+            message = "The password must be between 8 and 24 characters long, and include upper and lower case letters," +
+                    " numbers and special symbols.")
     private String password;
 
     @Column(name = "lastName", nullable = false, length = 50)
