@@ -26,6 +26,7 @@ public class UserAccountServiceTest {
     @Autowired
     private UserService userService;
 
+    // CREATE USER TESTS
     @Test
     public void createNewUser() {
         // Given
@@ -125,6 +126,108 @@ public class UserAccountServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(newUserAccount));
 
+        verify(userRepository, never()).save(any(UserAccount.class));
+    }
+
+    // EDIT PROFILE TEST
+    @Test
+    public void editProfile() {
+        // Given
+        UserAccount userAccount = UserAccount.builder()
+                .email("john.doe@test.com")
+                .password("Azerty123@")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
+
+        UserAccount modification = UserAccount.builder()
+                .email("john.doe@test.com")
+                .password("Azerty123@")
+                .lastName("Doe")
+                .firstName("J")
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
+
+        // When
+        userService.editProfile(userAccount, modification);
+
+        // Then
+        verify(userRepository).save(any(UserAccount.class));
+    }
+
+    @Test
+    public void editProfile_whenEmptyEntry() {
+        // Given
+        UserAccount userAccount = UserAccount.builder()
+                .email("john.doe@test.com")
+                .password("Azerty123@")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
+
+        UserAccount modification = UserAccount.builder()
+                .email("john.doe@test.com")
+                .password("Azerty123@")
+                .lastName("")
+                .firstName("J")
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount, modification));
+        verify(userRepository, never()).save(any(UserAccount.class));
+    }
+
+    @Test
+    public void editProfile_whenNullEntry() {
+        // Given
+        UserAccount userAccount = UserAccount.builder()
+                .email("john.doe@test.com")
+                .password("Azerty123@")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
+
+        UserAccount modification = UserAccount.builder()
+                .email("john.doe@test.com")
+                .password("Azerty123@")
+                .lastName(null)
+                .firstName("J")
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount, modification));
+        verify(userRepository, never()).save(any(UserAccount.class));
+    }
+
+    @Test
+    public void editProfile_whenUserNotFound() {
+        // Given
+        UserAccount userAccount = UserAccount.builder()
+                .email("john.doe@test.com")
+                .password("Azerty123@")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
+
+        UserAccount modification = UserAccount.builder()
+                .email("john.doe@test.com")
+                .password("Azerty123@")
+                .lastName(null)
+                .firstName("J")
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
+
+        // when(userRepository.findByEmail("john.doe@test.com")).thenReturn(Optional.of(existingUserAccount));
+        when(userRepository.findById(userAccount.getId())).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount, modification));
         verify(userRepository, never()).save(any(UserAccount.class));
     }
 }

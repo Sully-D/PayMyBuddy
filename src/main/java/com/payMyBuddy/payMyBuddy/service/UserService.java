@@ -1,6 +1,7 @@
 package com.payMyBuddy.payMyBuddy.service;
 
 import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
+import com.payMyBuddy.payMyBuddy.exception.UserNotFoundException;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.util.Utils;
@@ -71,5 +72,21 @@ public class UserService {
 
         // Persist the new user in the repository
         userRepository.save(saveUser);
+    }
+
+    public void editProfile(UserAccount userAccount, UserAccount modificationUser) {
+        Utils.checkArguments(modificationUser.getLastName(), "LastName");
+        Utils.checkArguments(modificationUser.getFirstName(), "FirstName");
+
+        Optional<UserAccount> existingUser = userRepository.findById(userAccount.getId());
+        if (existingUser.isEmpty()) {
+            throw new UserNotFoundException("A user not found : " + userAccount.getEmail() +
+                    "ID : " + userAccount.getId());
+        }
+
+        userAccount.setLastName(modificationUser.getLastName());
+        userAccount.setFirstName(modificationUser.getFirstName());
+
+        userRepository.save(userAccount);
     }
 }
