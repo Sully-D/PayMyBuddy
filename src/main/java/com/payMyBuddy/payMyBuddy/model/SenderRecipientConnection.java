@@ -14,10 +14,10 @@ public class SenderRecipientConnection {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "idSender", referencedColumnName = "id")
+    @JoinColumn(name = "id_sender", referencedColumnName = "id")
     private UserAccount sender;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "idRecipient", referencedColumnName = "id")
+    @JoinColumn(name = "id_recipient", referencedColumnName = "id")
     private UserAccount recipient;
 }

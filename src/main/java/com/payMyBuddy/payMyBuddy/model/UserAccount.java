@@ -3,14 +3,18 @@ package com.payMyBuddy.payMyBuddy.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
 @Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user_account")
 public class UserAccount {
 
@@ -30,11 +34,11 @@ public class UserAccount {
                     " numbers and special symbols.")
     private String password;
 
-    @Column(name = "lastName", nullable = false, length = 50)
+    @Column(name = "last_name", nullable = false, length = 50)
     @NotNull(message = "lastName can't null")
     private String lastName;
 
-    @Column(name = "firstName", nullable = false, length = 50)
+    @Column(name = "first_name", nullable = false, length = 50)
     @NotNull(message = "firstName can't null")
     private String firstName;
 

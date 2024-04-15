@@ -81,7 +81,7 @@ public class UserService {
         Optional<UserAccount> existingUser = userRepository.findById(userAccount.getId());
         if (existingUser.isEmpty()) {
             throw new UserNotFoundException("A user not found : " + userAccount.getEmail() +
-                    "ID : " + userAccount.getId());
+                    " ID : " + userAccount.getId());
         }
 
         userAccount.setLastName(modificationUser.getLastName());
