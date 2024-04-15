@@ -150,7 +150,7 @@ public class UserAccountServiceTest {
                 .build();
 
         // When
-        userService.editProfile(userAccount, modification);
+        userService.editProfile(userAccount.getId(), modification.getLastName(), modification.getFirstName());
 
         // Then
         verify(userRepository).save(any(UserAccount.class));
@@ -176,7 +176,8 @@ public class UserAccountServiceTest {
                 .build();
 
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount, modification));
+        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount.getId(),
+                modification.getLastName(), modification.getFirstName()));
         verify(userRepository, never()).save(any(UserAccount.class));
     }
 
@@ -200,7 +201,8 @@ public class UserAccountServiceTest {
                 .build();
 
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount, modification));
+        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount.getId(),
+                modification.getLastName(), modification.getFirstName()));
         verify(userRepository, never()).save(any(UserAccount.class));
     }
 
@@ -227,7 +229,8 @@ public class UserAccountServiceTest {
         when(userRepository.findById(userAccount.getId())).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount, modification));
+        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount.getId(),
+                modification.getLastName(), modification.getFirstName()));
         verify(userRepository, never()).save(any(UserAccount.class));
     }
 }

@@ -7,6 +7,8 @@ import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +22,12 @@ public class UserService {
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    @Autowired
     public UserService(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
     }
+
 
     /**
      * Creates a new user account in the system with initial checks for data validity,
@@ -74,19 +78,7 @@ public class UserService {
         userRepository.save(saveUser);
     }
 
-    public void editProfile(UserAccount userAccount, UserAccount modificationUser) {
-        Utils.checkArguments(modificationUser.getLastName(), "LastName");
-        Utils.checkArguments(modificationUser.getFirstName(), "FirstName");
-
-        Optional<UserAccount> existingUser = userRepository.findById(userAccount.getId());
-        if (existingUser.isEmpty()) {
-            throw new UserNotFoundException("A user not found : " + userAccount.getEmail() +
-                    " ID : " + userAccount.getId());
-        }
-
-        userAccount.setLastName(modificationUser.getLastName());
-        userAccount.setFirstName(modificationUser.getFirstName());
-
-        userRepository.save(userAccount);
+    public void editProfile(long id, String lastName, String firstName) {
+        userRepository.updateUser(id, lastName, firstName);
     }
 }

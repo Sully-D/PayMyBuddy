@@ -3,6 +3,7 @@ package com.payMyBuddy.payMyBuddy;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class UserServiceIntegrationTest {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @BeforeEach
+    public void setUp() {
+        userRepository.deleteAll();
+        userRepository.flush();
+    }
 
     @Test
     public void createUser_EncryptPassword() {
@@ -70,11 +77,11 @@ public class UserServiceIntegrationTest {
                 .build();
 
         // When
-        userService.editProfile(userAccount, modification);
+        userService.editProfile(userAccount.getId(), modification.getFirstName(), modification.getLastName());
 
         // Retrieve the updated user
-        //Optional<UserAccount> updatedUser = userRepository.findById(userAccount.getId());
-        Optional<UserAccount> updatedUser = userRepository.findByEmail(userAccount.getEmail());
+        Optional<UserAccount> updatedUser = userRepository.findById(userAccount.getId());
+        //Optional<UserAccount> updatedUser = userRepository.findByEmail(userAccount.getEmail());
         assertTrue(updatedUser.isPresent());
         assertEquals("J", updatedUser.get().getFirstName());
         assertEquals("Doe", updatedUser.get().getLastName());
