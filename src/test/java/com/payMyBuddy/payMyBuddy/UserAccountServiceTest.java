@@ -146,4 +146,17 @@ public class UserAccountServiceTest {
         verify(userRepository).updateUser(userId, newLastName, newFirstName);
     }
 
+    @Test
+    public void testEditProfileInvalidFormat() {
+        // Given
+        long userId = 1L;
+        String newFirstName = "Doe";
+        String newLastName = "";
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userId,
+                newFirstName, newLastName));
+        verify(userRepository, never()).updateUser(userId, newFirstName, newLastName);
+    }
+
 }
