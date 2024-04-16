@@ -13,6 +13,9 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 
 @SpringBootTest
@@ -63,7 +66,7 @@ public class UserServiceIntegrationTest {
                 .balance(BigDecimal.valueOf(0.00))
                 .build();
 
-        userRepository.save(userAccount);
+        userService.createUser(userAccount);
 
         UserAccount modification = UserAccount.builder()
                 .lastName("Doe")
@@ -78,5 +81,28 @@ public class UserServiceIntegrationTest {
         assertTrue(updatedUser.isPresent());
         assertEquals("J", updatedUser.get().getFirstName());
         assertEquals("Doe", updatedUser.get().getLastName());
+    }
+
+    @Test
+    public void whenEditProfile_thenModificationsInvalidFormat() {
+        // Given
+        UserAccount userAccount = UserAccount.builder()
+                .email("jane.doe@test.com")
+                .password("Azerty123@")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .build();
+
+        userService.createUser(userAccount);
+
+        UserAccount modification = UserAccount.builder()
+                .lastName("Doe")
+                .firstName("")
+                .build();
+
+        // When & Then
+        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount.getId(),
+                modification.getFirstName(), modification.getLastName()));
     }
 }
