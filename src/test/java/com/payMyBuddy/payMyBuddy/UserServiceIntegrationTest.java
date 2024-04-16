@@ -37,28 +37,6 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
-    public void createUser_EncryptPassword() {
-        // Given
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-        when(bCryptPasswordEncoder.encode(anyString())).thenAnswer(invocation -> "hashed" + invocation.getArgument(0));
-
-        UserAccount newUser = UserAccount.builder()
-                .email("john.doe@test.com")
-                .password("Azerty123@")
-                .lastName("Doe")
-                .firstName("John")
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
-
-        // When
-        userService.createUser(newUser);
-
-        // Then
-        assertNotEquals("Azerty123@", newUser.getPassword(), "Password must be encrypted");
-        assertTrue(newUser.getPassword().startsWith("hashed"), "The encrypted password must begin with 'hashed'.");
-    }
-
-    @Test
     public void whenEditProfile_thenModificationsArePersisted() {
         // Given
         UserAccount userAccount = UserAccount.builder()

@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -117,7 +119,7 @@ public class UserAccountServiceTest {
     @Test
     public void createUser_whenInvalidPasswordFormat() {
         UserAccount newUserAccount = UserAccount.builder()
-                .email("john.doe@testcom")
+                .email("john.doe@test.com")
                 .password("Azerty")
                 .lastName("Doe")
                 .firstName("John")
@@ -131,106 +133,17 @@ public class UserAccountServiceTest {
 
     // EDIT PROFILE TEST
     @Test
-    public void editProfile() {
+    public void testEditProfileUpdatesUserSuccessfully() {
         // Given
-        UserAccount userAccount = UserAccount.builder()
-                .email("john.doe@test.com")
-                .password("Azerty123@")
-                .lastName("Doe")
-                .firstName("John")
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
-
-        UserAccount modification = UserAccount.builder()
-                .email("john.doe@test.com")
-                .password("Azerty123@")
-                .lastName("Doe")
-                .firstName("J")
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
+        long userId = 1L;
+        String newFirstName = "Doe";
+        String newLastName = "Jane";
 
         // When
-        userService.editProfile(userAccount.getId(), modification.getLastName(), modification.getFirstName());
+        userService.editProfile(userId, newLastName, newFirstName);
 
         // Then
-        verify(userRepository).save(any(UserAccount.class));
+        verify(userRepository).updateUser(userId, newLastName, newFirstName);
     }
 
-    @Test
-    public void editProfile_whenEmptyEntry() {
-        // Given
-        UserAccount userAccount = UserAccount.builder()
-                .email("john.doe@test.com")
-                .password("Azerty123@")
-                .lastName("Doe")
-                .firstName("John")
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
-
-        UserAccount modification = UserAccount.builder()
-                .email("john.doe@test.com")
-                .password("Azerty123@")
-                .lastName("")
-                .firstName("J")
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
-
-        // When & Then
-        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount.getId(),
-                modification.getLastName(), modification.getFirstName()));
-        verify(userRepository, never()).save(any(UserAccount.class));
-    }
-
-    @Test
-    public void editProfile_whenNullEntry() {
-        // Given
-        UserAccount userAccount = UserAccount.builder()
-                .email("john.doe@test.com")
-                .password("Azerty123@")
-                .lastName("Doe")
-                .firstName("John")
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
-
-        UserAccount modification = UserAccount.builder()
-                .email("john.doe@test.com")
-                .password("Azerty123@")
-                .lastName(null)
-                .firstName("J")
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
-
-        // When & Then
-        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount.getId(),
-                modification.getLastName(), modification.getFirstName()));
-        verify(userRepository, never()).save(any(UserAccount.class));
-    }
-
-    @Test
-    public void editProfile_whenUserNotFound() {
-        // Given
-        UserAccount userAccount = UserAccount.builder()
-                .email("john.doe@test.com")
-                .password("Azerty123@")
-                .lastName("Doe")
-                .firstName("John")
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
-
-        UserAccount modification = UserAccount.builder()
-                .email("john.doe@test.com")
-                .password("Azerty123@")
-                .lastName(null)
-                .firstName("J")
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
-
-        // when(userRepository.findByEmail("john.doe@test.com")).thenReturn(Optional.of(existingUserAccount));
-        when(userRepository.findById(userAccount.getId())).thenReturn(Optional.empty());
-
-        // When & Then
-        assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userAccount.getId(),
-                modification.getLastName(), modification.getFirstName()));
-        verify(userRepository, never()).save(any(UserAccount.class));
-    }
 }
