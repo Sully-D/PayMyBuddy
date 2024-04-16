@@ -1,18 +1,15 @@
 package com.payMyBuddy.payMyBuddy.service;
 
 import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
-import com.payMyBuddy.payMyBuddy.exception.UserNotFoundException;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -63,19 +60,10 @@ public class UserService {
         String encodedPassword = bCryptPasswordEncoder.encode(newUser.getPassword());
         newUser.setPassword(encodedPassword);
 
-        // Creates a new user account with zero initial balance
-        UserAccount saveUser = UserAccount.builder()
-                .email(newUser.getEmail())
-                .password(encodedPassword)
-                .lastName(newUser.getLastName())
-                .firstName(newUser.getFirstName())
-                .balance(BigDecimal.valueOf(0.00))
-                .build();
-
         logger.info("New user saved");
 
         // Persist the new user in the repository
-        userRepository.save(saveUser);
+        userRepository.save(newUser);
     }
 
     public void editProfile(long id, String lastName, String firstName) {
