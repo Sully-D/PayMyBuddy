@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import com.payMyBuddy.payMyBuddy.config.SecurityConfig;
 import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
@@ -37,7 +36,7 @@ public class UserAccountServiceTest {
     public void createNewUser() {
         // Given
         UserAccount newUserAccount = UserAccount.builder()
-                .email("john.doe@test.com")
+                .username("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -56,7 +55,7 @@ public class UserAccountServiceTest {
     public void createUser_whenUserAlreadyExist() {
         // Given
         UserAccount existingUserAccount = UserAccount.builder()
-                .email("john.doe@test.com")
+                .username("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -67,7 +66,7 @@ public class UserAccountServiceTest {
         when(userRepository.findByEmail("john.doe@test.com")).thenReturn(Optional.of(existingUserAccount));
 
         UserAccount newUserAccount = UserAccount.builder()
-                .email("john.doe@test.com")
+                .username("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -82,7 +81,7 @@ public class UserAccountServiceTest {
     @Test
     public void createUser_whenEmptyEntry() {
         UserAccount newUserAccount = UserAccount.builder()
-                .email("john.doe@test.com")
+                .username("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName("")
                 .firstName("")
@@ -98,7 +97,7 @@ public class UserAccountServiceTest {
     @Test
     public void createUser_whenNullEntry() {
         UserAccount newUserAccount = UserAccount.builder()
-                .email("john.doe@test.com")
+                .username("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName(null)
                 .firstName("John")
@@ -113,7 +112,7 @@ public class UserAccountServiceTest {
     @Test
     public void createUser_whenInvalidEmailFormat() {
         UserAccount newUserAccount = UserAccount.builder()
-                .email("john.doe@testcom")
+                .username("john.doe@testcom")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -129,7 +128,7 @@ public class UserAccountServiceTest {
     @Test
     public void createUser_whenInvalidPasswordFormat() {
         UserAccount newUserAccount = UserAccount.builder()
-                .email("john.doe@test.com")
+                .username("john.doe@test.com")
                 .password("Azerty")
                 .lastName("Doe")
                 .firstName("John")

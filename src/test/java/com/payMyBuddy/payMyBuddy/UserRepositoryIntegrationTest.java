@@ -4,14 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
-import com.payMyBuddy.payMyBuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -34,7 +30,7 @@ public class UserRepositoryIntegrationTest {
     public void whenFindByEmail_thenReturnUser() {
         // Given
         UserAccount newUser = UserAccount.builder()
-                .email("john.doe@test.com")
+                .username("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -45,7 +41,7 @@ public class UserRepositoryIntegrationTest {
         userRepository.save(newUser);
 
         // When
-        Optional<UserAccount> found = userRepository.findByEmail(newUser.getEmail());
+        Optional<UserAccount> found = userRepository.findByEmail(newUser.getUsername());
 
         // Then
         assertTrue(found.isPresent());

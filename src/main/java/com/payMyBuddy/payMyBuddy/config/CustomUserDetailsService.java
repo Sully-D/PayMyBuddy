@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -24,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserAccount user = userRepository.findByUsername(email);
-        return new User(user.getEmail(), user.getPassword(), getGrantedAuthorities(user.getRole()));
+        return new User(user.getUsername(), user.getPassword(), getGrantedAuthorities(user.getRole()));
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(String role) {

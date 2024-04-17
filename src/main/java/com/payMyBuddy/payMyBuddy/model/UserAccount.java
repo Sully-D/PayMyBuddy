@@ -2,7 +2,6 @@ package com.payMyBuddy.payMyBuddy.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +24,7 @@ public class UserAccount {
 
     @Column(name = "email", nullable = false, unique = true, length = 50)
     @NotNull(message = "email can't null")
-    private String email;
+    private String username;
 
     @Column(name = "password", nullable = false, length = 255)
     @NotNull(message = "password can't null")
