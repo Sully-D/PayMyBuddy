@@ -39,6 +39,7 @@ public class UserRepositoryIntegrationTest {
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
 
         userRepository.save(newUser);

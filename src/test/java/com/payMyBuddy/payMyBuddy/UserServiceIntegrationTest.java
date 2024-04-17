@@ -13,9 +13,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+
 
 
 @SpringBootTest
@@ -45,6 +43,7 @@ public class UserServiceIntegrationTest {
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
 
         // When
@@ -64,6 +63,7 @@ public class UserServiceIntegrationTest {
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
 
         userService.createUser(userAccount);
@@ -92,6 +92,7 @@ public class UserServiceIntegrationTest {
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
 
         userService.createUser(userAccount);

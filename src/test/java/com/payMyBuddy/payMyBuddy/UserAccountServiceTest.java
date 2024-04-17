@@ -42,6 +42,7 @@ public class UserAccountServiceTest {
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
 
         // When
@@ -60,6 +61,7 @@ public class UserAccountServiceTest {
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
 
         when(userRepository.findByEmail("john.doe@test.com")).thenReturn(Optional.of(existingUserAccount));
@@ -70,6 +72,7 @@ public class UserAccountServiceTest {
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
 
         // When & Then
@@ -84,6 +87,7 @@ public class UserAccountServiceTest {
                 .lastName("")
                 .firstName("")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(newUserAccount));
@@ -99,6 +103,7 @@ public class UserAccountServiceTest {
                 .lastName(null)
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(newUserAccount));
 
@@ -113,6 +118,7 @@ public class UserAccountServiceTest {
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(newUserAccount));
@@ -128,6 +134,7 @@ public class UserAccountServiceTest {
                 .lastName("Doe")
                 .firstName("John")
                 .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(newUserAccount));
