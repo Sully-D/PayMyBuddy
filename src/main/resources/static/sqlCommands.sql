@@ -8,6 +8,7 @@ CREATE TABLE `user_account` (
     `last_name` VARCHAR(50) NOT NULL,
     `first_name` VARCHAR(50) NOT NULL,
     `balance` DECIMAL(10, 2) NOT NULL,
+    `role` VARCHAR(50) NOT NULL,
     PRIMARY KEY (`id`)
 );
 

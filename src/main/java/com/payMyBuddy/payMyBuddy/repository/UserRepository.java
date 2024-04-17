@@ -24,6 +24,8 @@ public interface UserRepository extends JpaRepository<UserAccount, Long> {
      */
     Optional<UserAccount> findByEmail(String email);
 
+    public UserAccount findByUsername (String username);
+
     @Modifying
     @Transactional
     @Query("UPDATE UserAccount u SET u.firstName = :firstName, u.lastName = :lastName WHERE u.id = :id")

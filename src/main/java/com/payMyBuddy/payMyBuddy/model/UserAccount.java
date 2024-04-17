@@ -29,10 +29,6 @@ public class UserAccount {
 
     @Column(name = "password", nullable = false, length = 255)
     @NotNull(message = "password can't null")
-//    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@!?;:#$%^&+=])(?=\\S+$).{8,24}$",
-//            message = "Invalid password format. The password must be between " +
-//                    "8 and 24 characters long, include upper and lower case letters, numbers, and special " +
-//                    "symbols among [@!?;:#$%^&+=]. Given: ")
     private String password;
 
     @Column(name = "last_name", nullable = false, length = 50)
@@ -47,4 +43,8 @@ public class UserAccount {
             columnDefinition = "DECIMAL(10,2) DEFAULT '0.00'")
     @NotNull(message = "balance can't null")
     private BigDecimal balance;
+
+    @Column(name = "role", nullable = false, length = 50)
+    @NotNull(message = "role can't null")
+    private String role;
 }
