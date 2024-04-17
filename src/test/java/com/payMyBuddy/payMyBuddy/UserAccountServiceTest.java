@@ -4,16 +4,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.payMyBuddy.payMyBuddy.config.SecurityConfig;
 import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.service.UserService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -24,6 +25,9 @@ public class UserAccountServiceTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @Mock
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     private UserService userService;
@@ -158,5 +162,4 @@ public class UserAccountServiceTest {
                 newFirstName, newLastName));
         verify(userRepository, never()).updateUser(userId, newFirstName, newLastName);
     }
-
 }
