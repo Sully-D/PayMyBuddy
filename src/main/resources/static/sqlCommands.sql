@@ -32,3 +32,9 @@ CREATE TABLE `transaction` (
     CONSTRAINT `fk_transaction_sender` FOREIGN KEY (`id_sender`) REFERENCES `user_account`(`id`),
     CONSTRAINT `fk_transaction_recipient` FOREIGN KEY (`id_recipient`) REFERENCES `user_account`(`id`)
 );
+
+-- Inserting data into User_Account table -> password = Azerty123!
+INSERT INTO `user_account` (`id`, `email`, `password`, `last_name`, `first_name`, `balance`, `role`)
+VALUES
+  (1, 'user@test.com', '$2y$10$HoA1/c4IAvc8c5AFV9K49.c9uj9IonOJMHH1zy1n0LpuHgSblZl7W', 'Doe', 'John', 100.00, 'USER'),
+  (2, 'admin@test.com', '$2y$10$HoA1/c4IAvc8c5AFV9K49.c9uj9IonOJMHH1zy1n0LpuHgSblZl7W', 'Doe', 'Jane', 100.00, 'ADMIN');
