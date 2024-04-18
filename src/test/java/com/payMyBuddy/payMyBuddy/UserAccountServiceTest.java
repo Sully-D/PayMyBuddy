@@ -36,7 +36,7 @@ public class UserAccountServiceTest {
     public void createNewUser() {
         // Given
         UserAccount newUserAccount = UserAccount.builder()
-                .username("john.doe@test.com")
+                .email("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -55,7 +55,7 @@ public class UserAccountServiceTest {
     public void createUser_whenUserAlreadyExist() {
         // Given
         UserAccount existingUserAccount = UserAccount.builder()
-                .username("john.doe@test.com")
+                .email("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -66,7 +66,7 @@ public class UserAccountServiceTest {
         when(userRepository.findByEmail("john.doe@test.com")).thenReturn(Optional.of(existingUserAccount));
 
         UserAccount newUserAccount = UserAccount.builder()
-                .username("john.doe@test.com")
+                .email("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -81,7 +81,7 @@ public class UserAccountServiceTest {
     @Test
     public void createUser_whenEmptyEntry() {
         UserAccount newUserAccount = UserAccount.builder()
-                .username("john.doe@test.com")
+                .email("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName("")
                 .firstName("")
@@ -97,7 +97,7 @@ public class UserAccountServiceTest {
     @Test
     public void createUser_whenNullEntry() {
         UserAccount newUserAccount = UserAccount.builder()
-                .username("john.doe@test.com")
+                .email("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName(null)
                 .firstName("John")
@@ -112,7 +112,7 @@ public class UserAccountServiceTest {
     @Test
     public void createUser_whenInvalidEmailFormat() {
         UserAccount newUserAccount = UserAccount.builder()
-                .username("john.doe@testcom")
+                .email("john.doe@testcom")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -128,7 +128,7 @@ public class UserAccountServiceTest {
     @Test
     public void createUser_whenInvalidPasswordFormat() {
         UserAccount newUserAccount = UserAccount.builder()
-                .username("john.doe@test.com")
+                .email("john.doe@test.com")
                 .password("Azerty")
                 .lastName("Doe")
                 .firstName("John")

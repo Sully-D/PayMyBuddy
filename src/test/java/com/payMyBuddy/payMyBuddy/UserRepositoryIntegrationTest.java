@@ -30,7 +30,7 @@ public class UserRepositoryIntegrationTest {
     public void whenFindByEmail_thenReturnUser() {
         // Given
         UserAccount newUser = UserAccount.builder()
-                .username("john.doe@test.com")
+                .email("john.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -41,7 +41,7 @@ public class UserRepositoryIntegrationTest {
         userRepository.save(newUser);
 
         // When
-        Optional<UserAccount> found = userRepository.findByEmail(newUser.getUsername());
+        Optional<UserAccount> found = userRepository.findByEmail(newUser.getEmail());
 
         // Then
         assertTrue(found.isPresent());

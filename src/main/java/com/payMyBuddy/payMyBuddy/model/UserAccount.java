@@ -24,7 +24,7 @@ public class UserAccount {
 
     @Column(name = "email", nullable = false, unique = true, length = 50)
     @NotNull(message = "email can't null")
-    private String username;
+    private String email;
 
     @Column(name = "password", nullable = false, length = 255)
     @NotNull(message = "password can't null")

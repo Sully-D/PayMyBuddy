@@ -40,20 +40,20 @@ public class UserService {
         logger.info("Start UserService.createUser()");
 
         // Validates non-null fields of the new user
-        Utils.checkArguments(newUser.getUsername(), "Email");
+        Utils.checkArguments(newUser.getEmail(), "Email");
         Utils.checkArguments(newUser.getPassword(), "Password");
         Utils.checkArguments(newUser.getLastName(), "LastName");
         Utils.checkArguments(newUser.getFirstName(), "FirstName");
         Utils.checkArguments(newUser.getBalance(), "Balance");
 
         // Validates the format of the email and password
-        Utils.checkEmailFormat(newUser.getUsername());
+        Utils.checkEmailFormat(newUser.getEmail());
         Utils.checkPasswordFormat(newUser.getPassword());
 
         // Checks if an existing user with the same email already exists
-        Optional<UserAccount> existingUser = userRepository.findByEmail(newUser.getUsername());
+        Optional<UserAccount> existingUser = userRepository.findByEmail(newUser.getEmail());
         if (existingUser.isPresent()) {
-            throw new UserAlreadyExistsException("A user with this email already exists : " + newUser.getUsername());
+            throw new UserAlreadyExistsException("A user with this email already exists : " + newUser.getEmail());
         }
 
         // Hashes the user's password for secure storage

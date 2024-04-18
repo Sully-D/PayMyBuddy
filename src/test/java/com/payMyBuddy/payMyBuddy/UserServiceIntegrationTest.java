@@ -38,7 +38,7 @@ public class UserServiceIntegrationTest {
     public void whenUserSaved() {
         // Given
         UserAccount userAccount = UserAccount.builder()
-                .username("john.doe@test.com")
+                .email("john.doe@test.com")
                 .password("Azerty@123!")
                 .lastName("Doe")
                 .firstName("John")
@@ -50,7 +50,7 @@ public class UserServiceIntegrationTest {
         userService.createUser(userAccount);
 
         // Then
-        Optional<UserAccount> userSaved = userRepository.findByEmail(userAccount.getUsername());
+        Optional<UserAccount> userSaved = userRepository.findByEmail(userAccount.getEmail());
         assertTrue(userSaved.isPresent());
     }
 
@@ -58,7 +58,7 @@ public class UserServiceIntegrationTest {
     public void whenEditProfile_thenModificationsArePersisted() {
         // Given
         UserAccount userAccount = UserAccount.builder()
-                .username("jane.doe@test.com")
+                .email("jane.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
@@ -87,7 +87,7 @@ public class UserServiceIntegrationTest {
     public void whenEditProfile_thenModificationsInvalidFormat() {
         // Given
         UserAccount userAccount = UserAccount.builder()
-                .username("jane.doe@test.com")
+                .email("jane.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
