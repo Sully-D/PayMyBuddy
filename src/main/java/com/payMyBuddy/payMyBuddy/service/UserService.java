@@ -19,6 +19,12 @@ public class UserService {
     private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    /**
+     * Constructs a new UserService with necessary dependencies.
+     *
+     * @param bCryptPasswordEncoder The password encoder used for encoding passwords before saving to the database.
+     * @param userRepository The repository for user data access operations.
+     */
     @Autowired
     public UserService(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;

@@ -24,6 +24,15 @@ public interface UserRepository extends JpaRepository<UserAccount, Long> {
      */
     Optional<UserAccount> findByEmail(String email);
 
+    /**
+     * Updates the firstName and lastName of an existing UserAccount in the database.
+     * This operation requires an active transaction and modifies the database,
+     * hence it is annotated with @Transactional and @Modifying.
+     *
+     * @param id The ID of the UserAccount to update.
+     * @param firstName The new first name to be set.
+     * @param lastName The new last name to be set.
+     */
     @Modifying
     @Transactional
     @Query("UPDATE UserAccount u SET u.firstName = :firstName, u.lastName = :lastName WHERE u.id = :id")
