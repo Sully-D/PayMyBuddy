@@ -3,6 +3,7 @@ package com.payMyBuddy.payMyBuddy;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
+import com.payMyBuddy.payMyBuddy.repository.SenderRecipientConnectionRepository;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,8 +20,13 @@ public class UserRepositoryIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    SenderRecipientConnectionRepository senderRecipientConnectionRepository;
+
     @BeforeEach
     public void setUp() {
+        senderRecipientConnectionRepository.deleteAll();
+        senderRecipientConnectionRepository.flush();
         userRepository.deleteAll();
         userRepository.flush();
     }
