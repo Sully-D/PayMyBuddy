@@ -60,4 +60,13 @@ public class Utils {
                     "symbols among [@#$%^&+=]. Given: ");
         }
     }
+
+    public static void validateUserId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("User ID cannot be null.");
+        }
+        if (id < 0) {
+            throw new IllegalArgumentException("User ID must be greater than zero.");
+        }
+    }
 }
