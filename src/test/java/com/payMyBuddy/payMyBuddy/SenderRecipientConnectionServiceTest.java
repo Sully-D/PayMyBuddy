@@ -1,5 +1,6 @@
 package com.payMyBuddy.payMyBuddy;
 
+import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
 import com.payMyBuddy.payMyBuddy.model.SenderRecipientConnection;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.SenderRecipientConnectionRepository;
@@ -14,9 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class SenderRecipientConnectionServiceTest {
@@ -62,5 +63,77 @@ public class SenderRecipientConnectionServiceTest {
 
         // Then
         verify(senderRecipientConnectionRepository).save(any(SenderRecipientConnection.class));
+    }
+
+    @Test
+    public void createConnection_WhenIdNull(){
+
+        // Given
+        UserAccount newUserJohn = UserAccount.builder()
+                .id(null)
+                .email("john.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        UserAccount newUserJane = UserAccount.builder()
+                .id(101L)
+                .email("jane.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("Jane")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        when(userRepository.findByEmail("jane.doe@test.com")).thenReturn(Optional.ofNullable(newUserJane));
+        when(userRepository.findById(newUserJohn.getId())).thenReturn(Optional.of(newUserJohn));
+        when(userRepository.findById(newUserJane.getId())).thenReturn(Optional.of(newUserJane));
+
+        // When
+        assertThrows(IllegalArgumentException.class, () ->
+                senderRecipientConnectionService.createConnection(newUserJohn, newUserJane));
+
+        // Then
+        verify(senderRecipientConnectionRepository, never()).save(any(SenderRecipientConnection.class));
+    }
+
+    @Test
+    public void createConnection_WhenIdNegatif(){
+
+        // Given
+        UserAccount newUserJohn = UserAccount.builder()
+                .id(-1L)
+                .email("john.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        UserAccount newUserJane = UserAccount.builder()
+                .id(101L)
+                .email("jane.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("Jane")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        when(userRepository.findByEmail("jane.doe@test.com")).thenReturn(Optional.ofNullable(newUserJane));
+        when(userRepository.findById(newUserJohn.getId())).thenReturn(Optional.of(newUserJohn));
+        when(userRepository.findById(newUserJane.getId())).thenReturn(Optional.of(newUserJane));
+
+        // When
+        assertThrows(IllegalArgumentException.class, () ->
+                senderRecipientConnectionService.createConnection(newUserJohn, newUserJane));
+
+        // Then
+        verify(senderRecipientConnectionRepository, never()).save(any(SenderRecipientConnection.class));
     }
 }
