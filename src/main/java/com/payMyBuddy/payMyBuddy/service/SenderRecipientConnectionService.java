@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for managing connections between users.
+ */
 @Service
 public class SenderRecipientConnectionService {
 
@@ -17,16 +20,27 @@ public class SenderRecipientConnectionService {
     @Autowired
     SenderRecipientConnectionRepository senderRecipientConnectionRepository;
 
+    /**
+     * Creates a connection between two user accounts.
+     * Validates the IDs of both users before creating the connection to ensure they are valid.
+     *
+     * @param sender The user account initiating the connection.
+     * @param recipient The user account receiving the connection.
+     * @throws IllegalArgumentException if either user ID is invalid (null or less than 1).
+     */
     public void createConnection(UserAccount sender, UserAccount recipient) {
 
+        // Validate user IDs before proceeding
         Utils.validateUserId(sender.getId());
         Utils.validateUserId(recipient.getId());
 
+        // Creating a new connection entity
         SenderRecipientConnection newSenderRecipientConnection = SenderRecipientConnection.builder()
                 .sender(sender)
                 .recipient(recipient)
                 .build();
 
+        // Save the new connection to the repository
         senderRecipientConnectionRepository.save(newSenderRecipientConnection);
     }
 }

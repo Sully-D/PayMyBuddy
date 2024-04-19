@@ -61,6 +61,12 @@ public class Utils {
         }
     }
 
+    /**
+     * Validates that a user ID is non-null and positive.
+     *
+     * @param id The user ID to validate.
+     * @throws IllegalArgumentException if the user ID is null or less than or equal to zero.
+     */
     public static void validateUserId(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("User ID cannot be null.");
