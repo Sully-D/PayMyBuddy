@@ -30,6 +30,7 @@ public class SenderRecipientConnectionService {
      * @param sender The user account initiating the connection.
      * @param recipient The user account receiving the connection.
      * @throws IllegalArgumentException if either user ID is invalid (null or less than 1).
+     * @throws IllegalArgumentException if friend already added.
      */
     public void createConnection(UserAccount sender, UserAccount recipient) {
 

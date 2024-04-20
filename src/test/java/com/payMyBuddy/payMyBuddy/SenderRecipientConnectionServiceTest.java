@@ -139,6 +139,44 @@ public class SenderRecipientConnectionServiceTest {
     }
 
     @Test
+    public void createConnection_WhenFriendAlreadyAdded() {
+
+        // Given
+        UserAccount newUserJohn = UserAccount.builder()
+                .id(100L)
+                .email("john.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        UserAccount newUserJane = UserAccount.builder()
+                .id(101L)
+                .email("jane.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("Jane")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        // Simulate that the connection already exists
+        when(senderRecipientConnectionRepository.findBySenderAndRecipient(newUserJohn, newUserJane))
+                .thenReturn(Optional.of(new SenderRecipientConnection()));
+
+        // When & Then
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            senderRecipientConnectionService.createConnection(newUserJohn, newUserJane);
+        });
+        assertEquals("Friend already added.", exception.getMessage());
+
+        // Ensure no connection is saved
+        verify(senderRecipientConnectionRepository, never()).save(any(SenderRecipientConnection.class));
+    }
+
+    @Test
     public void getConnection() {
 
         // Given
