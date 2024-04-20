@@ -58,6 +58,10 @@ public class SenderRecipientConnectionService {
     }
 
     public Optional<List<UserAccount>> getConnection(UserAccount userRelation) {
+
+        // Validate user IDs before proceeding
+        Utils.validateUserId(userRelation.getId());
+
         Long idUser = userRelation.getId();
 
         return senderRecipientConnectionRepository.findBySenderId(idUser);
