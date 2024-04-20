@@ -4,8 +4,13 @@ import com.payMyBuddy.payMyBuddy.model.SenderRecipientConnection;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface SenderRecipientConnectionRepository extends JpaRepository<SenderRecipientConnection, Long> {
     Optional<SenderRecipientConnection> findBySender(UserAccount user);
+
+    Optional<SenderRecipientConnection> findBySenderAndRecipient(UserAccount sender, UserAccount recipient);
+
+    Optional<List<UserAccount>> findBySenderId(long l);
 }

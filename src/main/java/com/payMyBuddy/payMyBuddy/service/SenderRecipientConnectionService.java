@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 /**
  * Service class for managing connections between users.
  */
@@ -34,13 +37,28 @@ public class SenderRecipientConnectionService {
         Utils.validateUserId(sender.getId());
         Utils.validateUserId(recipient.getId());
 
-        // Creating a new connection entity
-        SenderRecipientConnection newSenderRecipientConnection = SenderRecipientConnection.builder()
-                .sender(sender)
-                .recipient(recipient)
-                .build();
+        // Check if the connection already exists to avoid duplicates
+        if (!connectionExists(sender, recipient)) {
+            // Creating a new connection entity
+            SenderRecipientConnection newSenderRecipientConnection = SenderRecipientConnection.builder()
+                    .sender(sender)
+                    .recipient(recipient)
+                    .build();
 
-        // Save the new connection to the repository
-        senderRecipientConnectionRepository.save(newSenderRecipientConnection);
+            // Save the new connection to the repository
+            senderRecipientConnectionRepository.save(newSenderRecipientConnection);
+        } else {
+            throw new IllegalArgumentException("Friend already added.");
+        }
+    }
+
+    private boolean connectionExists(UserAccount sender, UserAccount recipient) {
+        return senderRecipientConnectionRepository.findBySenderAndRecipient(sender, recipient).isPresent();
+    }
+
+    public Optional<List<UserAccount>> getConnection(UserAccount userRelation) {
+        Long idUser = userRelation.getId();
+
+        return senderRecipientConnectionRepository.findBySenderId(idUser);
     }
 }

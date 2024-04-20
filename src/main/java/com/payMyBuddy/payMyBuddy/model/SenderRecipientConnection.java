@@ -27,4 +27,6 @@ public class SenderRecipientConnection {
     @JoinColumn(name = "id_recipient", referencedColumnName = "id")
     private UserAccount recipient;
 
+    public SenderRecipientConnection(UserAccount sender, UserAccount recipient) {
+    }
 }
