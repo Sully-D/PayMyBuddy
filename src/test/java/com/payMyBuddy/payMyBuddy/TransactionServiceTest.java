@@ -62,16 +62,6 @@ public class TransactionServiceTest {
                 .role("USER")
                 .build();
 
-        UserAccount newUserJean = UserAccount.builder()
-                .id(102L)
-                .email("jean.doe@test.com")
-                .password("Azerty123!")
-                .lastName("Doe")
-                .firstName("Jean")
-                .balance(BigDecimal.valueOf(0.00))
-                .role("USER")
-                .build();
-
         Transaction transaction = Transaction.builder()
                 .sender(newUserJohn)
                 .recipient(newUserJane)
@@ -80,6 +70,9 @@ public class TransactionServiceTest {
                 .date(now)
                 .build();
 
+        Optional<List<UserAccount>> friends = Optional.of(Arrays.asList(newUserJane));
+
+        when(senderRecipientConnectionService.getConnection(newUserJohn)).thenReturn(friends);
         when(transactionRepository.save(transaction)).thenReturn(transaction);
 
         // When
