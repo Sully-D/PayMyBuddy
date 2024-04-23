@@ -15,8 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -206,5 +205,60 @@ public class TransactionServiceTest {
 
         // Ensure that the transaction is not saved
         verify(transactionRepository, never()).save(any(Transaction.class));
+    }
+
+    @Test
+    public void getTransaction_Successfully(){
+        // Given
+        LocalDateTime now = LocalDateTime.now();
+
+        UserAccount newUserJohn = UserAccount.builder()
+                .id(100L)
+                .email("john.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        UserAccount newUserJane = UserAccount.builder()
+                .id(101L)
+                .email("jane.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("Jane")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        Transaction transaction = Transaction.builder()
+                .sender(newUserJohn)
+                .recipient(newUserJane)
+                .amount(BigDecimal.valueOf(25))
+                .description("Test")
+                .date(now)
+                .build();
+
+        Transaction transaction2 = Transaction.builder()
+                .sender(newUserJohn)
+                .recipient(newUserJane)
+                .amount(BigDecimal.valueOf(5))
+                .description("Test2")
+                .date(now)
+                .build();
+
+        List<Transaction> transactions = Arrays.asList(transaction, transaction2);
+
+        when(transactionRepository.findBySenderId(newUserJohn.getId())).thenReturn(Optional.of(transactions));
+
+        // When
+        List<String> result = transactionService.getTransaction(newUserJohn);
+
+        // Then
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(transactions.size(), result.size());
+        verify(transactionRepository).findBySenderId(newUserJohn.getId());
     }
 }
