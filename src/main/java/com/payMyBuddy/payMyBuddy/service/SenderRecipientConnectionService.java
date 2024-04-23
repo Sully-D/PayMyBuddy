@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class SenderRecipientConnectionService {
      * @throws IllegalArgumentException if either user ID is invalid (null or less than 1).
      * @throws IllegalArgumentException if friend already added.
      */
+    @Transactional(rollbackFor = { IllegalArgumentException.class })
     public void createConnection(UserAccount sender, UserAccount recipient) {
 
         // Validate user IDs before proceeding

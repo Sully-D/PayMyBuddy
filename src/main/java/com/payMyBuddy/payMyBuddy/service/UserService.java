@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -41,6 +42,7 @@ public class UserService {
      * @throws IllegalArgumentException If any essential attribute of {@code newUser} is {@code null}.
      * @throws UserAlreadyExistsException If a user with the same email already exists in the system.
      */
+    @Transactional
     public void createUser(UserAccount newUser) {
 
         logger.info("Start UserService.createUser()");
@@ -81,6 +83,7 @@ public class UserService {
      * @param firstName The new first name to set for the user. If it's {@code null}, the first name won't be updated.
      * @throws IllegalArgumentException If the {@code id} is less than or equal to zero, indicating an invalid user ID.
      */
+    @Transactional
     public void editProfile(long id, String lastName, String firstName) {
         // Check for a valid user ID
         if (id <= 0) {
