@@ -221,13 +221,12 @@ public class SenderRecipientConnectionServiceTest {
         // When
         senderRecipientConnectionService.createConnection(newUserJohn, newUserJane);
         senderRecipientConnectionService.createConnection(newUserJohn, newUserJean);
-        Optional<List<UserAccount>> johnFriends = senderRecipientConnectionService.getConnection(newUserJohn);
+        List<String> johnFriends = senderRecipientConnectionService.getConnection(newUserJohn);
 
         // Then
         assertNotNull(johnFriends);
-        assertTrue(johnFriends.isPresent());
-        assertEquals(2, johnFriends.get().size());
-        assertTrue(johnFriends.get().contains(newUserJane));
-        assertTrue(johnFriends.get().contains(newUserJean));
+        assertEquals(friends.size(), johnFriends.size());
+        assertTrue(johnFriends.get(0).contains("jane.doe@test.com"));
+        assertTrue(johnFriends.get(1).contains("jean.doe@test.com"));
     }
 }

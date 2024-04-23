@@ -28,8 +28,8 @@ public class TransactionService {
         Utils.valideAmount(transaction.getAmount());
         Utils.checkArguments(transaction.getDescription(), "description");
 
-        Optional<List<UserAccount>> friend = senderRecipientConnectionService.getConnection(transaction.getSender());
-        if (friend.isEmpty()){
+        List<String> friends = senderRecipientConnectionService.getConnection(transaction.getSender());
+        if (friends.isEmpty()){
             throw new SenderAndRecipientNotFriend(transaction.getSender().getEmail() + " Not friend with : "
                     + transaction.getRecipient().getEmail());
         }

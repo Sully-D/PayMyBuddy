@@ -63,7 +63,9 @@ public class TransactionServiceTest {
                 .date(now)
                 .build();
 
-        Optional<List<UserAccount>> friends = Optional.of(Arrays.asList(newUserJane));
+        List<String> friends = new ArrayList<>();
+        friends.add("email : " + newUserJane.getEmail() + ", " + newUserJane.getFirstName()
+                + " " + newUserJane.getLastName());
 
         when(senderRecipientConnectionService.getConnection(newUserJohn)).thenReturn(friends);
         when(transactionRepository.save(transaction)).thenReturn(transaction);
@@ -108,7 +110,9 @@ public class TransactionServiceTest {
                 .date(now)
                 .build();
 
-        when(senderRecipientConnectionService.getConnection(newUserJohn)).thenReturn(Optional.empty());
+        List<String> friendsVoid = new ArrayList<>();
+
+        when(senderRecipientConnectionService.getConnection(newUserJohn)).thenReturn(friendsVoid);
 
         // When & Then
         assertThrows(SenderAndRecipientNotFriend.class, () -> {
