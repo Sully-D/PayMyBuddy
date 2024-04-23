@@ -30,8 +30,8 @@ public class TransactionService {
 
         Optional<List<UserAccount>> friend = senderRecipientConnectionService.getConnection(transaction.getSender());
         if (friend.isEmpty()){
-            throw new SenderAndRecipientNotFriend(transaction.getSender().getEmail() + "Not friend with : "
-                    + transaction.getSender().getEmail());
+            throw new SenderAndRecipientNotFriend(transaction.getSender().getEmail() + " Not friend with : "
+                    + transaction.getRecipient().getEmail());
         }
 
         transactionRepository.save(transaction);

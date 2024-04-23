@@ -1,5 +1,6 @@
 package com.payMyBuddy.payMyBuddy;
 
+import com.payMyBuddy.payMyBuddy.exception.SenderAndRecipientNotFriend;
 import com.payMyBuddy.payMyBuddy.model.Transaction;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.TransactionRepository;
@@ -19,8 +20,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class TransactionServiceTest {
@@ -80,5 +81,49 @@ public class TransactionServiceTest {
 
         // Then
         verify(transactionRepository).save(transaction);
+    }
+
+    @Test
+    public void createTransaction_WhenNotFriend() {
+        // Given
+        LocalDateTime now = LocalDateTime.now();
+
+        UserAccount newUserJohn = UserAccount.builder()
+                .id(100L)
+                .email("john.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        UserAccount newUserJane = UserAccount.builder()
+                .id(101L)
+                .email("jane.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("Jane")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        Transaction transaction = Transaction.builder()
+                .sender(newUserJohn)
+                .recipient(newUserJane)
+                .amount(BigDecimal.valueOf(25.0))
+                .description("Test")
+                .date(now)
+                .build();
+
+        when(senderRecipientConnectionService.getConnection(newUserJohn)).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(SenderAndRecipientNotFriend.class, () -> {
+            transactionService.createTransaction(transaction);
+        });
+
+        // Ensure that the transaction is not saved
+        verify(transactionRepository, never()).save(any(Transaction.class));
     }
 }
