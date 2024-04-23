@@ -4,7 +4,6 @@ import com.payMyBuddy.payMyBuddy.exception.SenderAndRecipientNotFriend;
 import com.payMyBuddy.payMyBuddy.model.Transaction;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.TransactionRepository;
-import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.service.SenderRecipientConnectionService;
 import com.payMyBuddy.payMyBuddy.service.TransactionService;
 import org.junit.jupiter.api.Test;
@@ -13,21 +12,15 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class TransactionServiceTest {
-
-    @Mock
-    UserRepository userRepository;
 
     @Mock
     SenderRecipientConnectionService senderRecipientConnectionService;
@@ -122,6 +115,94 @@ public class TransactionServiceTest {
         assertThrows(SenderAndRecipientNotFriend.class, () -> {
             transactionService.createTransaction(transaction);
         });
+
+        // Ensure that the transaction is not saved
+        verify(transactionRepository, never()).save(any(Transaction.class));
+    }
+
+    @Test
+    public void createTransaction_WhenAmountIsNull() {
+        // Given
+        LocalDateTime now = LocalDateTime.now();
+
+        UserAccount newUserJohn = UserAccount.builder()
+                .id(100L)
+                .email("john.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        UserAccount newUserJane = UserAccount.builder()
+                .id(101L)
+                .email("jane.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("Jane")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        Transaction transaction = Transaction.builder()
+                .sender(newUserJohn)
+                .recipient(newUserJane)
+                .amount(null)
+                .description("Test")
+                .date(now)
+                .build();
+
+        // When & Then
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            transactionService.createTransaction(transaction);
+        });
+
+        assertEquals("Amount cannot be null.", exception.getMessage());
+
+        // Ensure that the transaction is not saved
+        verify(transactionRepository, never()).save(any(Transaction.class));
+    }
+
+    @Test
+    public void createTransaction_WhenAmountIsZero() {
+        // Given
+        LocalDateTime now = LocalDateTime.now();
+
+        UserAccount newUserJohn = UserAccount.builder()
+                .id(100L)
+                .email("john.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("John")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        UserAccount newUserJane = UserAccount.builder()
+                .id(101L)
+                .email("jane.doe@test.com")
+                .password("Azerty123!")
+                .lastName("Doe")
+                .firstName("Jane")
+                .balance(BigDecimal.valueOf(0.00))
+                .role("USER")
+                .build();
+
+        Transaction transaction = Transaction.builder()
+                .sender(newUserJohn)
+                .recipient(newUserJane)
+                .amount(BigDecimal.valueOf(0))
+                .description("Test")
+                .date(now)
+                .build();
+
+        // When & Then
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            transactionService.createTransaction(transaction);
+        });
+
+        assertEquals("Amount must be greater than zero.", exception.getMessage());
 
         // Ensure that the transaction is not saved
         verify(transactionRepository, never()).save(any(Transaction.class));
