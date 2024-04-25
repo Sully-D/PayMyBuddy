@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.SenderRecipientConnectionRepository;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
+import com.payMyBuddy.payMyBuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class UserRepositoryIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     SenderRecipientConnectionRepository senderRecipientConnectionRepository;
@@ -44,7 +48,7 @@ public class UserRepositoryIntegrationTest {
                 .role("USER")
                 .build();
 
-        userRepository.save(newUser);
+        userService.createUser(newUser);
 
         // When
         Optional<UserAccount> found = userRepository.findByEmail(newUser.getEmail());
