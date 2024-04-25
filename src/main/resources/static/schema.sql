@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `payMyBuddy`;
-USE `payMyBuddy`;
+--CREATE DATABASE IF NOT EXISTS `payMyBuddy`;
+--USE `payMyBuddy`;
 
 CREATE TABLE `user_account` (
     `id` INT NOT NULL AUTO_INCREMENT,
