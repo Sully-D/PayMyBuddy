@@ -5,12 +5,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-//@RequestMapping("/auth")
 public class LoginController {
 
     @GetMapping("/login")
-    public String login() {
+    public String loginPage() {
         return "login";
+    }
+
+    @PostMapping("/login")
+    public String handleLogin(String email, String password, boolean rememberMe) {
+        return "redirect:/home";
     }
 
     @PostMapping("/logout")
