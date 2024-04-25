@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Page de Profil</title>
+    <link rel="stylesheet" th:href="@{/css/profile.css}" />
+</head>
+<body>
+<!-- Barre de navigation -->
+<nav>
+    <ul>
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/transfer}">Transfer</a></li>
+        <li><a th:href="@{/profile}">Profile</a></li>
+        <li><a th:href="@{/contact}">Contact</a></li>
+        <li><a th:href="@{/logout}">Log off</a></li>
+    </ul>
+</nav>
+
+<!-- Barre d'arborescence -->
+<div class="breadcrumb">
+    <a th:href="@{/}">Home</a> / <span>Profile</span>
+</div>
+
+<!-- Éditer Nom et Prénom -->
+<div class="edit-profile">
+    <h2>Edite Profile</h2>
+    <form th:action="@{/updateProfile}" method="post">
+        <div class="form-group">
+            <label for="firstname">Firstname :</label>
+            <input type="text" id="firstname" name="firstname" required>
+        </div>
+        <div class="form-group">
+            <label for="lastname">Lastname :</label>
+            <input type="text" id="lastname" name="lastname" required>
+        </div>
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<!-- Ajouter des fonds -->
+<div class="add-funds">
+    <h2>Add Funds</h2>
+    <form th:action="@{/addFunds}" method="post">
+        <div class="form-group">
+            <label for="amount">Amount to add :</label>
+            <input type="number" id="amount" name="amount" min="0" required>
+        </div>
+        <button type="submit">Add</button>
+    </form>
+</div>
+</body>
+</html>
