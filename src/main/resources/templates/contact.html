@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Page de Contact</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<!-- Barre de navigation -->
+<nav>
+    <ul>
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/transfer}">Transfer</a></li>
+        <li><a th:href="@{/profile}">Profile</a></li>
+        <li><a th:href="@{/contact}">Contact</a></li>
+        <li><a th:href="@{/logout}">Log off</a></li>
+    </ul>
+</nav>
+
+<!-- Barre d'arborescence -->
+<div class="breadcrumb">
+    <a th:href="@{/}">Home</a> / <span>Contact</span>
+</div>
+
+<!-- Formulaire pour ajouter un ami -->
+<div class="add-friend">
+    <h2>Add Friend</h2>
+    <form th:action="@{/addFriend}" method="post">
+        <div class="form-group">
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <button type="submit">Add</button>
+    </form>
+</div>
+</body>
+</html>
