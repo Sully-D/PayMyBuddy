@@ -7,6 +7,8 @@ import com.payMyBuddy.payMyBuddy.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,5 +98,14 @@ public class UserService {
         userRepository.updateUser(id, lastName, firstName);
     }
 
+    @Transactional
+    public Optional<UserAccount> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No user currently authenticated");
+        }
+        String username = authentication.getName();
+        return userRepository.findByEmail(username);
+    }
 
 }
