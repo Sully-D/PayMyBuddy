@@ -22,11 +22,6 @@ public class LoginController {
         return new ModelAndView("login");
     }
 
-//    @PostMapping("/login")
-//    public String handleLogin(String email, String password, boolean rememberMe) {
-//        return "redirect:/home";
-//    }
-
     @PostMapping("/logout")
     public String logout() {
         return "redirect:/login?logout";

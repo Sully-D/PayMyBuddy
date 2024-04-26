@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,10 +37,12 @@ public class TransactionService {
                     + transaction.getRecipient().getEmail());
         }
 
+        BigDecimal fee = transaction.getAmount().multiply(new BigDecimal("0.005"));
+
         Transaction makeTransaction = Transaction.builder()
                 .sender(transaction.getSender())
                 .recipient(transaction.getRecipient())
-                .amount(transaction.getAmount())
+                .amount(transaction.getAmount().add(fee))
                 .date(transaction.getDate())
                 .description(transaction.getDescription())
                 .build();
