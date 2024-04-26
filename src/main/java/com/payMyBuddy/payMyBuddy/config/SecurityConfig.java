@@ -38,13 +38,34 @@ public class SecurityConfig {
      * @return SecurityFilterChain The security filter chain configured for handling HTTP requests.
      * @throws Exception if there is a problem during configuration.
      */
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+//        return http.authorizeHttpRequests(auth -> {
+//            auth.requestMatchers("/admin").hasRole("ADMIN");
+//            auth.requestMatchers("/user").hasRole("USER");
+//            auth.anyRequest().authenticated();
+//        }).formLogin(Customizer.withDefaults()).build();
+//    }
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        return http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/admin").hasRole("ADMIN");
-            auth.requestMatchers("/user").hasRole("USER");
-            auth.anyRequest().authenticated();
-        }).formLogin(Customizer.withDefaults()).build();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/user").hasRole("USER")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/home", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                );
+        return http.build();
     }
 
     /**
