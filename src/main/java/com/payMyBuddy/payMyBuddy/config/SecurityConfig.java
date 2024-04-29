@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 /**
  * Security configuration class for Spring Security.
@@ -51,6 +52,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/user").hasRole("USER")
                         .anyRequest().authenticated()
@@ -61,14 +63,26 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                )
                 .rememberMe(rememberMe -> rememberMe
                         .key("uniqueAndSecret")
+                        .tokenValiditySeconds(86400) // 1 day in seconds
                         .rememberMeCookieName("remember-me")
-                        .tokenValiditySeconds(86400) // Day in seconds
+                        .rememberMeParameter("remember-me")
+                        .useSecureCookie(true)  // Allow secure flag
+                )
+                .sessionManagement(session -> session
+                        .sessionFixation().migrateSession()
+//                        .sessionCookieConfig(cookie -> {
+//                            cookie.setHttpOnly(true);  // Flag HttpOnly
+//                            cookie.setSecure(true);   // Flag Secure in session
+//                        })
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler(logoutSuccessHandler())
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID", "remember-me")
+                        .logoutSuccessUrl("/login?logout")
                 );
         return http.build();
     }
@@ -86,5 +100,12 @@ public class SecurityConfig {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
         return authenticationManagerBuilder.build();
+    }
+
+    private LogoutSuccessHandler logoutSuccessHandler() {
+        return (request, response, authentication) -> {
+            SecurityContextHolder.clearContext();
+            response.sendRedirect("/login"); // Redirection après déconnexion
+        };
     }
 }

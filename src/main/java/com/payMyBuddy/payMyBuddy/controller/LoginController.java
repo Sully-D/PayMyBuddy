@@ -38,4 +38,36 @@ public class LoginController {
         return new ModelAndView("index");
     }
 
+    @GetMapping("/transfer")
+    public ModelAndView transferPage(Model model) {
+        Optional<UserAccount> userOptional = userService.getCurrentUser();
+        if (userOptional.isPresent()) {
+            model.addAttribute("user", userOptional.get());
+        } else {
+            return new ModelAndView("login");
+        }
+        return new ModelAndView("transfer");
+    }
+
+    @GetMapping("/profile")
+    public ModelAndView profilePage(Model model) {
+        Optional<UserAccount> userOptional = userService.getCurrentUser();
+        if (userOptional.isPresent()) {
+            model.addAttribute("user", userOptional.get());
+        } else {
+            return new ModelAndView("login");
+        }
+        return new ModelAndView("profile");
+    }
+
+    @GetMapping("/contact")
+    public ModelAndView contactPage(Model model) {
+        Optional<UserAccount> userOptional = userService.getCurrentUser();
+        if (userOptional.isPresent()) {
+            model.addAttribute("user", userOptional.get());
+        } else {
+            return new ModelAndView("login");
+        }
+        return new ModelAndView("contact");
+    }
 }
