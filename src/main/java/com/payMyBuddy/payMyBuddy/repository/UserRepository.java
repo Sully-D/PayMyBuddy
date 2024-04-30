@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 /**
@@ -38,4 +39,8 @@ public interface UserRepository extends JpaRepository<UserAccount, Long> {
     @Query("UPDATE UserAccount u SET u.firstName = :firstName, u.lastName = :lastName WHERE u.id = :id")
     void updateUser(@Param("id") long id, @Param("firstName") String firstName, @Param("lastName") String lastName);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE UserAccount u SET u.balance = u.balance + :amountToAdd WHERE u.id = :id")
+    void addFund(@Param("id") long id, @Param("amountToAdd") BigDecimal amountToAdd);
 }

@@ -25,14 +25,15 @@
 <!-- Éditer Nom et Prénom -->
 <div class="edit-profile">
     <h2>Edite Profile</h2>
-    <form th:action="@{/profile}" method="post">
+    <form th:action="@{/updateProfile}" method="post">
+        <input type="hidden" name="id" th:value="${user.id}">
         <div class="form-group">
             <label for="firstname">Firstname :</label>
-            <input type="text" id="firstname" name="firstName" required>
+            <input type="text" id="firstname" name="firstName" required th:value="${user.firstName}">
         </div>
         <div class="form-group">
             <label for="lastname">Lastname :</label>
-            <input type="text" id="lastname" name="lastName" required>
+            <input type="text" id="lastname" name="lastName" required th:value="${user.lastName}">
         </div>
         <button type="submit">Save</button>
     </form>
@@ -42,6 +43,7 @@
 <div class="add-funds">
     <h2>Add Funds</h2>
     <form th:action="@{/addFunds}" method="post">
+        <input type="hidden" name="id" th:value="${user.id}">
         <div class="form-group">
             <label for="amount">Amount to add :</label>
             <input type="number" id="amount" name="amount" min="0" required>

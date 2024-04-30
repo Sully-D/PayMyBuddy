@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -106,6 +107,16 @@ public class UserService {
         }
         String username = authentication.getName();
         return userRepository.findByEmail(username);
+    }
+
+    @Transactional
+    public void addFund(long id, BigDecimal amount) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("User ID must be greater than zero.");
+        }
+        Utils.valideAmount(amount);
+
+        userRepository.addFund(id, amount);
     }
 
 }

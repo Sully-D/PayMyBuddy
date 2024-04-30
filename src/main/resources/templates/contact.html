@@ -26,6 +26,7 @@
 <div class="add-friend">
     <h2>Add Friend</h2>
     <form th:action="@{/addFriend}" method="post">
+        <input type="hidden" name="id" th:value="${user.id}">
         <div class="form-group">
             <label for="email">Email :</label>
             <input type="email" id="email" name="email" required>
