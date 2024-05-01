@@ -4,7 +4,11 @@ import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.service.SenderRecipientConnectionService;
 import com.payMyBuddy.payMyBuddy.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +30,28 @@ public class UserController {
     @Autowired
     SenderRecipientConnectionService senderRecipientConnectionService;
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+//    @GetMapping("/home")
+//    public String homePage(Model model) {
+//        Optional<UserAccount> optionalUserAccount = userService.getCurrentUser();
+//        if (optionalUserAccount.isPresent()) {
+//            model.addAttribute("user", optionalUserAccount.get());
+//        } else {
+//            return "login";
+//        }
+//        return "home";
+//    }
     @GetMapping("/home")
     public String homePage(Model model) {
-        Optional<UserAccount> optionalUserAccount = userService.getCurrentUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<UserAccount> optionalUserAccount = userRepository.findByEmail(email);
+        logger.debug("Loading home for user: {}", email);
         if (optionalUserAccount.isPresent()) {
             model.addAttribute("user", optionalUserAccount.get());
         } else {
+            logger.error("No user found with email: {}", email);
             return "login";
         }
         return "home";
