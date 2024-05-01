@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -59,9 +60,14 @@ public class UserController {
 
     @GetMapping("/transfer")
     public String transferPage(Model model) {
-        Optional<UserAccount> optionalUserAccount = userService.getCurrentUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<UserAccount> optionalUserAccount = userRepository.findByEmail(email);
         if (optionalUserAccount.isPresent()) {
-            model.addAttribute("user", optionalUserAccount.get());
+            UserAccount userAccount = optionalUserAccount.get();
+            List<String> connections = senderRecipientConnectionService.getConnection(userAccount);
+            model.addAttribute("user", userAccount);
+            model.addAttribute("connections", connections);
         } else {
             return "login";
         }

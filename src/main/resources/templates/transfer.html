@@ -29,8 +29,10 @@
         <div class="form-group">
             <label for="recipient">Recipient:</label>
             <select id="recipient" name="recipient">
-                <option value="1">Person A</option>
-                <option value="2">Person B</option>
+                <option th:each="connection, connStat : ${connections}"
+                        th:value="${connStat.index}"
+                        th:text="${connection}">
+                </option>
             </select>
         </div>
         <div class="form-group">

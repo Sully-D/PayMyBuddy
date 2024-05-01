@@ -56,7 +56,6 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/user").hasRole("USER")
-                        //.requestMatchers("/profile").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -97,7 +96,7 @@ public class SecurityConfig {
     private LogoutSuccessHandler logoutSuccessHandler() {
         return (request, response, authentication) -> {
             SecurityContextHolder.clearContext();
-            response.sendRedirect("/login"); // Redirection après déconnexion
+            response.sendRedirect("/login");
         };
     }
 }

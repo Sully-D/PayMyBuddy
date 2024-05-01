@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,30 +61,44 @@ public class SenderRecipientConnectionService {
         return senderRecipientConnectionRepository.findBySenderAndRecipient(sender, recipient).isPresent();
     }
 
+//    public List<String> getConnection(UserAccount userRelation) {
+//
+//        // Validate user IDs before proceeding
+//        Utils.validateUserId(userRelation.getId());
+//
+//        Long idUser = userRelation.getId();
+//
+//        Optional<List<UserAccount>> users = senderRecipientConnectionRepository.findBySenderId(idUser);
+//
+//        List<String> connections = new ArrayList<>();
+//
+//        users.ifPresent(list -> {
+//                    for (UserAccount user : list) {
+//                        List<String> lines = new ArrayList<>();
+//
+//                        lines.add("email : " + user.getEmail());
+//                        lines.add(", " + user.getFirstName() + " " + user.getLastName());
+//
+//                        String userDetails = String.join(", ", lines);
+//
+//                        connections.add(userDetails);
+//                    }
+//        });
+//
+//        return connections;
+//    }
     public List<String> getConnection(UserAccount userRelation) {
-
-        // Validate user IDs before proceeding
         Utils.validateUserId(userRelation.getId());
 
-        Long idUser = userRelation.getId();
-
-        Optional<List<UserAccount>> users = senderRecipientConnectionRepository.findBySenderId(idUser);
+        List<UserAccount> users = senderRecipientConnectionRepository.findRecipientsBySenderId(userRelation.getId());
 
         List<String> connections = new ArrayList<>();
-
-        users.ifPresent(list -> {
-                    for (UserAccount user : list) {
-                        List<String> lines = new ArrayList<>();
-
-                        lines.add("email : " + user.getEmail());
-                        lines.add(", " + user.getFirstName() + " " + user.getLastName());
-
-                        String userDetails = String.join(", ", lines);
-
-                        connections.add(userDetails);
-                    }
-        });
+        for (UserAccount user : users) {
+            String userDetails = "email : " + user.getEmail() + ", " + user.getFirstName() + " " + user.getLastName();
+            connections.add(userDetails);
+        }
 
         return connections;
     }
+
 }
