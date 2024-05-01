@@ -50,6 +50,9 @@ public class UserService {
 
         logger.info("Start UserService.createUser()");
 
+        newUser.setBalance(BigDecimal.valueOf(0));
+        newUser.setRole("USER");
+
         // Validates non-null fields of the new user
         Utils.checkArguments(newUser.getEmail(), "Email");
         Utils.checkArguments(newUser.getPassword(), "Password");

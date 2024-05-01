@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}" />
+</head>
+<body>
+<div class="registration-container">
+    <h2>Register</h2>
+    <form th:action="@{/register}" th:object="${userAccount}" method="post">
+        <div class="form-group">
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" th:field="*{email}" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password (min. 8 characters, including upper and lower case letters, numbers and symbols) :</label>
+            <input type="password" id="password" name="password" th:field="*{password}"
+                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}" title="The password must contain at least 8
+                   characters, including upper and lower case letters, numbers and symbols." required>
+        </div>
+        <div class="form-group">
+            <label for="firstName">First name :</label>
+            <input type="text" id="firstName" name="firstName" th:field="*{firstName}" required>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last name :</label>
+            <input type="text" id="lastName" name="lastName" th:field="*{lastName}" required>
+        </div>
+        <button type="submit">Sign up</button>
+    </form>
+    <p>Already have an account? <a th:href="@{/login}">Login here</a></p>
+</div>
+</body>
+</html>
