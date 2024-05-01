@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -64,26 +65,16 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/home", true)
                         .permitAll()
                 )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .sessionFixation().migrateSession()
+                )
                 .rememberMe(rememberMe -> rememberMe
                         .key("uniqueAndSecret")
-                        .tokenValiditySeconds(86400) // 1 day in seconds
-                        .rememberMeCookieName("remember-me")
-                        .rememberMeParameter("remember-me")
-                        .useSecureCookie(true)  // Allow secure flag
-                )
-                .sessionManagement(session -> session
-                        .sessionFixation().migrateSession()
-//                        .sessionCookieConfig(cookie -> {
-//                            cookie.setHttpOnly(true);  // Flag HttpOnly
-//                            cookie.setSecure(true);   // Flag Secure in session
-//                        })
+                        .tokenValiditySeconds(86400) // 1 day
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessHandler(logoutSuccessHandler())
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID", "remember-me")
-                        .logoutSuccessUrl("/login?logout")
+                        .deleteCookies("JSESSIONID")
                 );
         return http.build();
     }
