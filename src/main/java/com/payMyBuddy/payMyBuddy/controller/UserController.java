@@ -75,7 +75,7 @@ public class UserController {
                                 @RequestParam("firstname") String firstname,
                                 @RequestParam("lastname") String lastname) {
         try {
-            userService.editProfile(id, lastname, firstname);
+            userService.editProfile(id, firstname, lastname);
             return "redirect:/profile?success";
         } catch (IllegalArgumentException e) {
             return "redirect:/profile?error";

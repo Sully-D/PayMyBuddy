@@ -57,10 +57,22 @@ public class TransactionServiceTest {
                 .role("USER")
                 .build();
 
+        BigDecimal baseAmount = BigDecimal.valueOf(25.0);
+        BigDecimal fee = baseAmount.multiply(new BigDecimal("0.005"));
+        BigDecimal totalAmount = baseAmount.add(fee);
+
         Transaction transaction = Transaction.builder()
                 .sender(newUserJohn)
                 .recipient(newUserJane)
-                .amount(BigDecimal.valueOf(25.0))
+                .amount(baseAmount)
+                .description("Test")
+                .date(now)
+                .build();
+
+        Transaction transactionWithFee = Transaction.builder()
+                .sender(newUserJohn)
+                .recipient(newUserJane)
+                .amount(totalAmount)
                 .description("Test")
                 .date(now)
                 .build();
@@ -70,13 +82,13 @@ public class TransactionServiceTest {
                 + " " + newUserJane.getLastName());
 
         when(senderRecipientConnectionService.getConnection(newUserJohn)).thenReturn(friends);
-        when(transactionRepository.save(transaction)).thenReturn(transaction);
+        when(transactionRepository.save(transaction)).thenReturn(transactionWithFee);
 
         // When
         transactionService.createTransaction(transaction);
 
         // Then
-        verify(transactionRepository).save(transaction);
+        verify(transactionRepository).save(transactionWithFee);
     }
 
     @Test

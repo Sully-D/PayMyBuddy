@@ -82,21 +82,21 @@ public class UserService {
      * This method specifically updates the user's last name and first name based on the provided user ID.
      *
      * @param id The unique identifier of the user whose profile is to be updated.
-     * @param lastName The new last name to set for the user. If it's {@code null}, the last name won't be updated.
+     * @param firstName The new last name to set for the user. If it's {@code null}, the last name won't be updated.
      * @param firstName The new first name to set for the user. If it's {@code null}, the first name won't be updated.
      * @throws IllegalArgumentException If the {@code id} is less than or equal to zero, indicating an invalid user ID.
      */
     @Transactional
-    public void editProfile(long id, String lastName, String firstName) {
+    public void editProfile(long id, String firstName, String lastName) {
         // Check for a valid user ID
         if (id <= 0) {
             throw new IllegalArgumentException("User ID must be greater than zero.");
         }
-        Utils.checkArguments(lastName, "LastName");
         Utils.checkArguments(firstName, "FirstName");
+        Utils.checkArguments(lastName, "LastName");
 
         // Call to repository to update the user's last name and first name based on the user ID
-        userRepository.updateUser(id, lastName, firstName);
+        userRepository.updateUser(id, firstName, lastName);
     }
 
     @Transactional

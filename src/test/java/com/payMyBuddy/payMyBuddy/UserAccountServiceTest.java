@@ -152,10 +152,10 @@ public class UserAccountServiceTest {
         String newLastName = "Jane";
 
         // When
-        userService.editProfile(userId, newLastName, newFirstName);
+        userService.editProfile(userId, newFirstName, newLastName);
 
         // Then
-        verify(userRepository).updateUser(userId, newLastName, newFirstName);
+        verify(userRepository).updateUser(userId, newFirstName, newLastName);
     }
 
     @Test
