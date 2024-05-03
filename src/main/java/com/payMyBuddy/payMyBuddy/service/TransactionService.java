@@ -9,6 +9,9 @@ import com.payMyBuddy.payMyBuddy.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -67,32 +70,10 @@ public class TransactionService {
     }
 
 
-    public List<String> getTransaction(UserAccount userAccount) {
-
-        // Validate user IDs before proceeding
+    public Page<Transaction> getTransaction(UserAccount userAccount, int page, int size) {
         Utils.validateUserId(userAccount.getId());
-
-        Long idUser = userAccount.getId();
-
-        Optional<List<Transaction>> result = transactionRepository.findBySenderId(idUser);
-
-        List<String> transactions = new ArrayList<>();
-        result.ifPresent(list -> {
-            for (Transaction transaction : list) {
-                List<String> lines = new ArrayList<>();
-
-                lines.add("Sender : " + transaction.getSender().getEmail());
-                lines.add("Recipient : " + transaction.getRecipient().getEmail());
-                lines.add("Amount : " + transaction.getAmount());
-                lines.add("Date : " + transaction.getDate());
-                lines.add("Description : " + transaction.getDescription());
-
-                String transactionDetails = String.join(", ", lines);
-
-                transactions.add(transactionDetails);
-            }
-        });
-
-        return transactions;
+        Pageable pageable = PageRequest.of(page, size);
+        return transactionRepository.findBySenderId(userAccount.getId(), pageable);
     }
+
 }

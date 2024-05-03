@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
@@ -229,6 +232,7 @@ public class TransactionServiceTest {
     public void getTransaction_Successfully(){
         // Given
         LocalDateTime now = LocalDateTime.now();
+        Pageable pageable = PageRequest.of(0, 4);
 
         UserAccount newUserJohn = UserAccount.builder()
                 .id(100L)
@@ -266,17 +270,16 @@ public class TransactionServiceTest {
                 .date(now)
                 .build();
 
-        List<Transaction> transactions = Arrays.asList(transaction, transaction2);
+        Page<Transaction> transactions = (Page<Transaction>) Arrays.asList(transaction, transaction2);
 
-        when(transactionRepository.findBySenderId(newUserJohn.getId())).thenReturn(Optional.of(transactions));
+        when(transactionRepository.findBySenderId(newUserJohn.getId(), pageable)).thenReturn(transactions);
 
         // When
-        List<String> result = transactionService.getTransaction(newUserJohn);
+        Page<Transaction> result = transactionService.getTransaction(newUserJohn, 0, 4);
 
         // Then
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        assertEquals(transactions.size(), result.size());
-        verify(transactionRepository).findBySenderId(newUserJohn.getId());
+        verify(transactionRepository).findBySenderId(newUserJohn.getId(), pageable);
     }
 }

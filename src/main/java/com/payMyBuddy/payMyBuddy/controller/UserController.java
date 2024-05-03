@@ -10,6 +10,7 @@ import com.payMyBuddy.payMyBuddy.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -70,15 +71,19 @@ public class UserController {
     }
 
     @GetMapping("/transfer")
-    public String transferPage(Model model) {
+    public String transferPage(Model model,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "4") int size) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         Optional<UserAccount> optionalUserAccount = userRepository.findByEmail(email);
         if (optionalUserAccount.isPresent()) {
             UserAccount userAccount = optionalUserAccount.get();
             List<String> connections = senderRecipientConnectionService.getConnection(userAccount);
+            Page<Transaction> transactionsPage = transactionService.getTransaction(userAccount, page, size);
             model.addAttribute("user", userAccount);
             model.addAttribute("connections", connections);
+            model.addAttribute("transactionsPage", transactionsPage);
         } else {
             return "login";
         }

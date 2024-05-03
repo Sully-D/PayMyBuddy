@@ -61,32 +61,6 @@ public class SenderRecipientConnectionService {
         return senderRecipientConnectionRepository.findBySenderAndRecipient(sender, recipient).isPresent();
     }
 
-//    public List<String> getConnection(UserAccount userRelation) {
-//
-//        // Validate user IDs before proceeding
-//        Utils.validateUserId(userRelation.getId());
-//
-//        Long idUser = userRelation.getId();
-//
-//        Optional<List<UserAccount>> users = senderRecipientConnectionRepository.findBySenderId(idUser);
-//
-//        List<String> connections = new ArrayList<>();
-//
-//        users.ifPresent(list -> {
-//                    for (UserAccount user : list) {
-//                        List<String> lines = new ArrayList<>();
-//
-//                        lines.add("email : " + user.getEmail());
-//                        lines.add(", " + user.getFirstName() + " " + user.getLastName());
-//
-//                        String userDetails = String.join(", ", lines);
-//
-//                        connections.add(userDetails);
-//                    }
-//        });
-//
-//        return connections;
-//    }
     public List<String> getConnection(UserAccount userRelation) {
         Utils.validateUserId(userRelation.getId());
 

@@ -47,24 +47,19 @@
 <div class="my-transactions">
     <h2>My Transactions</h2>
     <table>
-        <thead>
-        <tr>
-            <th>Connections</th>
-            <th>Description</th>
-            <th>Amount</th>
+        <tr th:each="transaction : ${transactionsPage.content}">
+            <td th:text="${transaction.sender.email}"></td>
+            <td th:text="${transaction.recipient.email}"></td>
+            <td th:text="${transaction.amount}"></td>
+            <td th:text="${transaction.date}"></td>
+            <td th:text="${transaction.description}"></td>
         </tr>
-        </thead>
-        <tbody>
-        <!--À faire - Ajouter les données des transactions dynamiquement ici -->
-        </tbody>
     </table>
-    <div class="pagination">
-        <!-- Créer une pagination dynamique en fonction du nombre de transaction -->
-        <a href="#"><<</a>
-        <a href="#">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">>></a>
+
+    <div>
+        <a th:if="${transactionsPage.hasPrevious()}" th:href="@{/transfer(page=${transactionsPage.number - 1}, size=${transactionsPage.size})}">Previous</a>
+        <span th:text="${transactionsPage.number + 1} + '/' + ${transactionsPage.totalPages}"></span>
+        <a th:if="${transactionsPage.hasNext()}" th:href="@{/transfer(page=${transactionsPage.number + 1}, size=${transactionsPage.size})}">Next</a>
     </div>
 </div>
 </body>
