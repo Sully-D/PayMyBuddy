@@ -45,16 +45,6 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-//    @GetMapping("/home")
-//    public String homePage(Model model) {
-//        Optional<UserAccount> optionalUserAccount = userService.getCurrentUser();
-//        if (optionalUserAccount.isPresent()) {
-//            model.addAttribute("user", optionalUserAccount.get());
-//        } else {
-//            return "login";
-//        }
-//        return "home";
-//    }
     @GetMapping("/home")
     public String homePage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -77,16 +67,17 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         Optional<UserAccount> optionalUserAccount = userRepository.findByEmail(email);
-        if (optionalUserAccount.isPresent()) {
-            UserAccount userAccount = optionalUserAccount.get();
-            List<String> connections = senderRecipientConnectionService.getConnection(userAccount);
-            Page<Transaction> transactionsPage = transactionService.getTransaction(userAccount, page, size);
-            model.addAttribute("user", userAccount);
-            model.addAttribute("connections", connections);
-            model.addAttribute("transactionsPage", transactionsPage);
-        } else {
-            return "login";
+        if (!optionalUserAccount.isPresent()) {
+            return "redirect:/login";
         }
+
+        UserAccount userAccount = optionalUserAccount.get();
+        List<String> connections = senderRecipientConnectionService.getConnection(userAccount);
+        Page<Transaction> transactionsPage = transactionService.getTransaction(userAccount, page, size);
+        model.addAttribute("user", userAccount);
+        model.addAttribute("connections", connections);
+        model.addAttribute("transactionsPage", transactionsPage);
+
         return "transfer";
     }
 
@@ -96,7 +87,7 @@ public class UserController {
         if (optionalUserAccount.isPresent()) {
             model.addAttribute("user", optionalUserAccount.get());
         } else {
-            return "login";
+            return "redirect:/login";
         }
         return "profile";
     }
@@ -107,7 +98,7 @@ public class UserController {
         if (optionalUserAccount.isPresent()) {
             model.addAttribute("user", optionalUserAccount.get());
         } else {
-            return "login";
+            return "redirect:/login";
         }
         return "contact";
     }
@@ -144,7 +135,7 @@ public class UserController {
         if (optionalUserAccount.isPresent()) {
             currentUser = optionalUserAccount.get();
         } else {
-            return "login";
+            return "redirect:/login";
         }
 
         UserAccount friend = null;
@@ -152,7 +143,7 @@ public class UserController {
         if (optionalFriend.isPresent()) {
             friend = optionalFriend.get();
         } else {
-            return "error";
+            return "redirect:/error";
         }
 
         try {
