@@ -35,10 +35,10 @@ public class SenderRecipientConnectionServiceIntergrationTest {
 
     @BeforeEach
     public void setUp() {
-        userRepository.deleteAll();
-        userRepository.flush();
-        senderRecipientConnectionRepository.deleteAll();
-        senderRecipientConnectionRepository.flush();
+//        userRepository.deleteAll();
+//        userRepository.flush();
+//        senderRecipientConnectionRepository.deleteAll();
+//        senderRecipientConnectionRepository.flush();
 
 //        UserAccount userJohn = UserAccount.builder()
 //                .id(100L)

@@ -4,6 +4,7 @@ import com.payMyBuddy.payMyBuddy.exception.SenderAndRecipientNotFriend;
 import com.payMyBuddy.payMyBuddy.model.Transaction;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.TransactionRepository;
+import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.service.SenderRecipientConnectionService;
 import com.payMyBuddy.payMyBuddy.service.TransactionService;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -31,6 +33,9 @@ public class TransactionServiceTest {
 
     @Mock
     TransactionRepository transactionRepository;
+
+    @Mock
+    UserRepository userRepository;
 
     @InjectMocks
     TransactionService transactionService;
@@ -46,7 +51,7 @@ public class TransactionServiceTest {
                 .password("Azerty123!")
                 .lastName("Doe")
                 .firstName("John")
-                .balance(BigDecimal.valueOf(0.00))
+                .balance(BigDecimal.valueOf(100.00))
                 .role("USER")
                 .build();
 
@@ -56,42 +61,30 @@ public class TransactionServiceTest {
                 .password("Azerty123!")
                 .lastName("Doe")
                 .firstName("Jane")
-                .balance(BigDecimal.valueOf(0.00))
+                .balance(BigDecimal.valueOf(50.00))
                 .role("USER")
                 .build();
-
-        BigDecimal baseAmount = BigDecimal.valueOf(25.0);
-        BigDecimal fee = baseAmount.multiply(new BigDecimal("0.005"));
-        BigDecimal totalAmount = baseAmount.add(fee);
 
         Transaction transaction = Transaction.builder()
                 .sender(newUserJohn)
                 .recipient(newUserJane)
-                .amount(baseAmount)
+                .amount(BigDecimal.valueOf(20))
                 .description("Test")
                 .date(now)
                 .build();
 
-        Transaction transactionWithFee = Transaction.builder()
-                .sender(newUserJohn)
-                .recipient(newUserJane)
-                .amount(totalAmount)
-                .description("Test")
-                .date(now)
-                .build();
-
-        List<String> friends = new ArrayList<>();
-        friends.add("email : " + newUserJane.getEmail() + ", " + newUserJane.getFirstName()
-                + " " + newUserJane.getLastName());
-
-        when(senderRecipientConnectionService.getConnection(newUserJohn)).thenReturn(friends);
-        when(transactionRepository.save(transaction)).thenReturn(transactionWithFee);
+        when(senderRecipientConnectionService.getConnection(newUserJohn)).thenReturn(Collections.singletonList("jane.doe@example.com"));
+        when(userRepository.save(any(UserAccount.class))).then(returnsFirstArg());
+        when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
         // When
         transactionService.createTransaction(transaction);
 
         // Then
-        verify(transactionRepository).save(transactionWithFee);
+        assertEquals("79.900", String.valueOf(newUserJohn.getBalance()));
+        assertEquals(BigDecimal.valueOf(70.0), newUserJane.getBalance());
+        verify(transactionRepository).save(any(Transaction.class));
+        verify(userRepository, times(2)).save(any(UserAccount.class));
     }
 
     @Test
@@ -244,42 +237,16 @@ public class TransactionServiceTest {
                 .role("USER")
                 .build();
 
-        UserAccount newUserJane = UserAccount.builder()
-                .id(101L)
-                .email("jane.doe@test.com")
-                .password("Azerty123!")
-                .lastName("Doe")
-                .firstName("Jane")
-                .balance(BigDecimal.valueOf(0.00))
-                .role("USER")
-                .build();
+        Page<Transaction> expectedPage = mock(Page.class);
 
-        Transaction transaction = Transaction.builder()
-                .sender(newUserJohn)
-                .recipient(newUserJane)
-                .amount(BigDecimal.valueOf(25))
-                .description("Test")
-                .date(now)
-                .build();
-
-        Transaction transaction2 = Transaction.builder()
-                .sender(newUserJohn)
-                .recipient(newUserJane)
-                .amount(BigDecimal.valueOf(5))
-                .description("Test2")
-                .date(now)
-                .build();
-
-        Page<Transaction> transactions = (Page<Transaction>) Arrays.asList(transaction, transaction2);
-
-        when(transactionRepository.findBySenderId(newUserJohn.getId(), pageable)).thenReturn(transactions);
+        when(transactionRepository.findBySenderId(newUserJohn.getId(), pageable)).thenReturn(expectedPage);
 
         // When
         Page<Transaction> result = transactionService.getTransaction(newUserJohn, 0, 4);
 
         // Then
         assertNotNull(result);
-        assertFalse(result.isEmpty());
+        assertEquals(expectedPage, result);
         verify(transactionRepository).findBySenderId(newUserJohn.getId(), pageable);
     }
 }

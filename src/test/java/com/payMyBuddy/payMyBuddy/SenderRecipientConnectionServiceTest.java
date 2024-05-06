@@ -214,21 +214,33 @@ public class SenderRecipientConnectionServiceTest {
 
         List<UserAccount> friends = Arrays.asList(newUserJane, newUserJean);
 
-        Optional<List<UserAccount>> johnConnections = Optional.of(friends);
-
-        when(userRepository.findById(100L)).thenReturn(Optional.of(newUserJohn));
-        when(senderRecipientConnectionRepository.findBySenderId(100L)).thenReturn(johnConnections);
-        when(senderRecipientConnectionRepository.save(any(SenderRecipientConnection.class))).thenReturn(null);
+        when(senderRecipientConnectionRepository.findRecipientsBySenderId(newUserJohn.getId())).thenReturn(friends);
 
         // When
-        senderRecipientConnectionService.createConnection(newUserJohn, newUserJane);
-        senderRecipientConnectionService.createConnection(newUserJohn, newUserJean);
-        List<String> johnFriends = senderRecipientConnectionService.getConnection(newUserJohn);
+        List<String> connections = senderRecipientConnectionService.getConnection(newUserJohn);
 
         // Then
-        assertNotNull(johnFriends);
-        assertEquals(friends.size(), johnFriends.size());
-        assertTrue(johnFriends.get(0).contains("jane.doe@test.com"));
-        assertTrue(johnFriends.get(1).contains("jean.doe@test.com"));
+        assertNotNull(connections);
+        assertEquals(2, connections.size());
+        assertTrue(connections.contains("email : jane.doe@test.com, Jane Doe"));
+        assertTrue(connections.contains("email : jean.doe@test.com, Jean Doe"));
+        verify(senderRecipientConnectionRepository).findRecipientsBySenderId(newUserJohn.getId());
+
+//        Optional<List<UserAccount>> johnConnections = Optional.of(friends);
+//
+//        when(userRepository.findById(100L)).thenReturn(Optional.of(newUserJohn));
+//        when(senderRecipientConnectionRepository.findBySenderId(100L)).thenReturn(johnConnections);
+//        when(senderRecipientConnectionRepository.save(any(SenderRecipientConnection.class))).thenReturn(null);
+//
+//        // When
+//        senderRecipientConnectionService.createConnection(newUserJohn, newUserJane);
+//        senderRecipientConnectionService.createConnection(newUserJohn, newUserJean);
+//        List<String> johnFriends = senderRecipientConnectionService.getConnection(newUserJohn);
+//
+//        // Then
+//        assertNotNull(johnFriends);
+//        assertEquals(friends.size(), johnFriends.size());
+//        assertTrue(johnFriends.get(0).contains("jane.doe@test.com"));
+//        assertTrue(johnFriends.get(1).contains("jean.doe@test.com"));
     }
 }
