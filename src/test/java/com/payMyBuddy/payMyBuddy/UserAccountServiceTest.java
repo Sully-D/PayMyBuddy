@@ -10,9 +10,13 @@ import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -29,6 +33,12 @@ public class UserAccountServiceTest {
 
     @Mock
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+//    @Mock
+//    Authentication authentication;
+//
+//    @Mock
+//    SecurityContext securityContext;
 
     @Autowired
     private UserService userService;
@@ -182,5 +192,43 @@ public class UserAccountServiceTest {
         assertThrows(IllegalArgumentException.class, () -> userService.editProfile(userId,
                 newFirstName, newLastName));
         verify(userRepository, never()).updateUser(userId, newFirstName, newLastName);
+    }
+
+    @Test
+    public void getCurrentUser_WhenAuthenticated_ReturnsUser() {
+        try (MockedStatic<SecurityContextHolder> mocked = mockStatic(SecurityContextHolder.class)) {
+            // Setup the SecurityContext and Authentication objects
+            SecurityContext securityContext = mock(SecurityContext.class);
+            Authentication authentication = mock(Authentication.class);
+
+            // Configure mocks
+            when(SecurityContextHolder.getContext()).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.isAuthenticated()).thenReturn(true);
+            when(authentication.getName()).thenReturn("user@example.com");
+
+            UserAccount expectedUser = new UserAccount();
+            when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(expectedUser));
+
+            // Execute the method under test
+            Optional<UserAccount> result = userService.getCurrentUser();
+
+            // Assertions
+            assertTrue(result.isPresent());
+            assertEquals(expectedUser, result.get());
+        } // The static mock is automatically released here
+    }
+
+    @Test
+    public void getCurrentUser_WhenNotAuthenticated_ThrowsException() {
+        try (MockedStatic<SecurityContextHolder> mocked = mockStatic(SecurityContextHolder.class)) {
+            SecurityContext securityContext = mock(SecurityContext.class);
+
+            when(SecurityContextHolder.getContext()).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(null);
+
+            // Execute and assert the expected exception
+            assertThrows(IllegalStateException.class, () -> userService.getCurrentUser());
+        }
     }
 }
