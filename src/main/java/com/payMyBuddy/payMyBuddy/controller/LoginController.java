@@ -41,7 +41,7 @@ public class LoginController {
     @PostMapping("/register")
     public String registerUserAccount(@ModelAttribute("userForm") UserAccount userAccount, BindingResult result) {
         if (result.hasErrors()) {
-            return "index";
+            return "redirect:/index";
         }
 
         userService.createUser(userAccount);
