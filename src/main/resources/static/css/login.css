@@ -11,13 +11,35 @@ body {
 
 .login-container {
     background: white;
-    padding: 20px;
+    padding: 30px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.login-container h2{
+    background: linear-gradient(#60B95A, #74BD51, #87C14B);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+}
+
 .form-group {
     margin-bottom: 15px;
+}
+
+.remember-me-group {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+.login-button {
+    border: none;
+    text-align: center;
+    margin-top: 50px;
 }
 
 label {
@@ -26,19 +48,19 @@ label {
 }
 
 input[type="email"], input[type="password"], button {
-    width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
 button {
-    background-color: #519839;
+    background-color: #0275D8;
     color: white;
-    border: none;
-    cursor: pointer;
+    border-radius: 8px;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
 button:hover {
-    background-color: #5058e5;
+    background-color: #0050F0;
 }

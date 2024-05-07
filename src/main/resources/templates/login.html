@@ -10,18 +10,18 @@
     <h2>Pay My Buddy</h2>
     <form th:action="@{/login}" method="post">
         <div class="form-group">
-            <label for="email">E-mail :</label>
-            <input type="email" id="email" name="username" required>
+            <label for="email"></label>
+            <input type="email" id="email" name="username" required placeholder="E-mail">
         </div>
         <div class="form-group">
-            <label for="password">Password :</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password"></label>
+            <input type="password" id="password" name="password" required placeholder="Password">
         </div>
-        <div class="form-group">
+        <div class="form-group remember-me-group">
             <input type="checkbox" id="remember-me" name="remember-me">
-            <label for="remember-me">Remember Me</label>
+            <label for="remember-me">Remember me</label>
         </div>
-        <div class="form-group">
+        <div class="form-group login-button">
             <button type="submit">Login</button>
         </div>
     </form>
