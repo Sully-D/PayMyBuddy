@@ -47,13 +47,17 @@ nav h2 {
 }
 
 .breadcrumb {
-    background-color: #f4f4f4;
+    background-color: #F5F5F5;
     padding: 15px;
 }
 
 .breadcrumb a {
     text-decoration: none;
-    color: #0275D8;
+    color: #337AB7;
+}
+
+.breadcrumb a:nth-of-type(2) {
+    color: #9E9E9E;
 }
 
 .edit-profile, .add-funds {
@@ -77,7 +81,7 @@ input[type="text"], input[type="number"], button {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 100%;
+    width: 95%;
 }
 
 button {
@@ -85,6 +89,7 @@ button {
     color: white;
     border: none;
     cursor: pointer;
+    width: 10%;
 }
 
 button:hover {

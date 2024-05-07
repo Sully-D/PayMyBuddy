@@ -25,7 +25,7 @@ body {
     border-radius: 5px;
     border: none;
     color: white;
-    background-color: #5c67f2;
+    background-color: #0275D8;
     cursor: pointer;
 }
 
@@ -34,7 +34,7 @@ body {
 }
 
 .btn-logout:hover {
-    background-color: #519839;
+    background-color: #0050F0;
 }
 
 .btn-cancel:hover {
