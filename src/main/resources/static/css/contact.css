@@ -49,6 +49,9 @@ nav h2 {
 .breadcrumb {
     background-color: #F5F5F5;
     padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .breadcrumb a {
@@ -58,6 +61,10 @@ nav h2 {
 
 .breadcrumb a:nth-of-type(2) {
     color: #9E9E9E;
+}
+
+.breadcrumb p {
+    color: #337AB7;
 }
 
 .add-friend {

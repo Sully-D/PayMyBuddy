@@ -49,11 +49,22 @@ nav h2 {
 .breadcrumb {
     background-color: #F5F5F5;
     padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .breadcrumb a {
     text-decoration: none;
     color: #9E9E9E;
+}
+
+.breadcrumb a:nth-of-type(2) {
+    color: #9E9E9E;
+}
+
+.breadcrumb p {
+    color: #F5F5F5;
 }
 
 .user-info {
