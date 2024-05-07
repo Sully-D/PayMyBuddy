@@ -4,28 +4,56 @@ body {
     padding: 0;
 }
 
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+}
+
 nav ul {
     list-style: none;
-    background-color: #333;
+    background-color: white;
     text-align: center;
     padding: 0;
     margin: 0;
+    margin-left: auto;
+    display: flex;
 }
 
 nav ul li {
-    display: inline;
+    display: inline-block;
 }
 
 nav ul li a {
     text-decoration: none;
-    color: white;
-    padding: 15px 20px;
+    color: black;
+    padding: 1px 20px;
     display: inline-block;
+}
+
+nav ul li.active a {
+    color: #0275D8;
+}
+
+nav h2 {
+    background: linear-gradient(#60B95A, #74BD51, #87C14B);
+    color: white;
+    padding: 10px;
+    margin-left: 5px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    border-radius: 8px;
 }
 
 .breadcrumb {
     background-color: #f4f4f4;
-    padding: 10px;
+    padding: 15px;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: #0275D8;
 }
 
 .edit-profile, .add-funds {
