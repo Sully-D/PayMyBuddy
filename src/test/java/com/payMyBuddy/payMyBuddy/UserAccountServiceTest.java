@@ -5,12 +5,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
+import com.payMyBuddy.payMyBuddy.exception.UserNotFoundException;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

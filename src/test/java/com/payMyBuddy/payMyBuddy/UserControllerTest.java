@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -281,5 +282,15 @@ public class UserControllerTest {
                 .andExpect(flash().attribute("error", "Transaction failed: Transaction failed"));
     }
 
+    @Test
+    public void handleWithdraw_SuccessfulWithdrawal_ShouldRedirectWithSuccess() throws Exception {
+        // Mock the successful withdrawal operation
+        doNothing().when(userService).withdraw(BigDecimal.valueOf(100), "FR123456789");
 
+        mockMvc.perform(post("/withdraw")
+                        .param("iban", "FR123456789")
+                        .param("amount", "100.00"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/home?withdraw=success"));
+    }
 }
