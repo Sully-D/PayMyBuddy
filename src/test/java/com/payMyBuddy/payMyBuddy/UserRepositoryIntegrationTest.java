@@ -31,10 +31,10 @@ public class UserRepositoryIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        senderRecipientConnectionRepository.deleteAll();
-        senderRecipientConnectionRepository.flush();
-        userRepository.deleteAll();
-        userRepository.flush();
+//        senderRecipientConnectionRepository.deleteAll();
+//        senderRecipientConnectionRepository.flush();
+//        userRepository.deleteAll();
+//        userRepository.flush();
     }
 
 

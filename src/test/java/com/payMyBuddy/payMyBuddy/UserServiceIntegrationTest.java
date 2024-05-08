@@ -32,15 +32,15 @@ public class UserServiceIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        userRepository.deleteAll();
-        userRepository.flush();
+//        userRepository.deleteAll();
+//        userRepository.flush();
     }
 
     @Test
     public void whenUserSaved() {
         // Given
         UserAccount userAccount = UserAccount.builder()
-                .email("john.doe@test.com")
+                .email("johnn.doe@test.com")
                 .password("Azerty@123!")
                 .lastName("Doe")
                 .firstName("John")
@@ -60,7 +60,7 @@ public class UserServiceIntegrationTest {
     public void whenEditProfile_thenModificationsArePersisted() {
         // Given
         UserAccount userAccount = UserAccount.builder()
-                .email("jane.doe@test.com")
+                .email("janee.doe@test.com")
                 .password("Azerty123@")
                 .lastName("Doe")
                 .firstName("John")
