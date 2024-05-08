@@ -2,6 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color : white;
 }
 
 nav {
@@ -67,7 +68,7 @@ nav h2 {
     color: #F5F5F5;
 }
 
-.user-info {
+.user-info, .withdraw-form {
     background: white;
     padding: 20px;
     margin-top: 20px;
@@ -83,4 +84,18 @@ nav h2 {
 
 .user-info p {
     margin: 10px 0;
+}
+
+button {
+    background-color: #519839;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #5058e5;
 }

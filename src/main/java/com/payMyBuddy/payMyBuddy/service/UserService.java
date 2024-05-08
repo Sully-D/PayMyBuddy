@@ -1,6 +1,7 @@
 package com.payMyBuddy.payMyBuddy.service;
 
 import com.payMyBuddy.payMyBuddy.exception.UserAlreadyExistsException;
+import com.payMyBuddy.payMyBuddy.exception.UserNotFoundException;
 import com.payMyBuddy.payMyBuddy.model.UserAccount;
 import com.payMyBuddy.payMyBuddy.repository.UserRepository;
 import com.payMyBuddy.payMyBuddy.util.Utils;
@@ -120,6 +121,24 @@ public class UserService {
         Utils.valideAmount(amount);
 
         userRepository.addFund(id, amount);
+    }
+
+    @Transactional
+    public void withdraw(BigDecimal amount, String iban) {
+        Utils.valideAmount(amount);
+
+        Optional<UserAccount> user = getCurrentUser();
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("Invalid user or user not connected");
+        }
+        UserAccount currentUser = user.get();
+
+        if (currentUser.getBalance().compareTo(amount) < 0) {
+            throw new IllegalArgumentException("Insufficient funds");
+        }
+        currentUser.setBalance(currentUser.getBalance().subtract(amount));
+
+        userRepository.save(currentUser);
     }
 
 }

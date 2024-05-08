@@ -280,4 +280,6 @@ public class UserControllerTest {
                 .andExpect(redirectedUrl("/transfer"))
                 .andExpect(flash().attribute("error", "Transaction failed: Transaction failed"));
     }
+
+
 }

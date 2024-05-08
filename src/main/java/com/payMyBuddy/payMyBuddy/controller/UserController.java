@@ -196,4 +196,14 @@ public class UserController {
         return "redirect:/transfer";
     }
 
+    @PostMapping("/withdraw")
+    public String handleWithdraw(@RequestParam String iban, @RequestParam BigDecimal amount) {
+        try {
+            userService.withdraw(amount, iban);
+            return "redirect:/home?withdraw=success";
+        } catch (Exception e) {
+            return "redirect:/home?withdraw=error";
+        }
+    }
+
 }
