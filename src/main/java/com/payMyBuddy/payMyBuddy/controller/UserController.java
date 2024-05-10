@@ -45,12 +45,21 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    /**
+     * Displays the home page for the authenticated user, or redirects to login if not authenticated.
+     *
+     * @param model The model to hold user attributes.
+     * @return The name of the home view template.
+     */
     @GetMapping("/home")
     public String homePage(Model model) {
+        // Get the current authenticated user's email
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         Optional<UserAccount> optionalUserAccount = userRepository.findByEmail(email);
+
         logger.debug("Loading home for user: {}", email);
+
         if (optionalUserAccount.isPresent()) {
             model.addAttribute("user", optionalUserAccount.get());
         } else {
@@ -60,20 +69,34 @@ public class UserController {
         return "home";
     }
 
+    /**
+     * Displays the transfer page for the authenticated user, including their connections and transactions.
+     *
+     * @param model The model to hold page attributes.
+     * @param page The page number for transaction pagination.
+     * @param size The number of transactions per page.
+     * @return The name of the transfer view template.
+     */
     @GetMapping("/transfer")
     public String transferPage(Model model,
                                @RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "4") int size) {
+        // Retrieve the current authenticated user's email
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         Optional<UserAccount> optionalUserAccount = userRepository.findByEmail(email);
+
+        // Redirect to login if no authenticated user is found
         if (!optionalUserAccount.isPresent()) {
             return "redirect:/login";
         }
 
+        // Fetch user details, connections, and transactions
         UserAccount userAccount = optionalUserAccount.get();
         List<String> connections = senderRecipientConnectionService.getConnection(userAccount);
         Page<Transaction> transactionsPage = transactionService.getTransaction(userAccount, page, size);
+
+        // Populate the model with relevant data
         model.addAttribute("user", userAccount);
         model.addAttribute("connections", connections);
         model.addAttribute("transactionsPage", transactionsPage);
@@ -81,9 +104,16 @@ public class UserController {
         return "transfer";
     }
 
+    /**
+     * Displays the profile page for the authenticated user, or redirects to login if not authenticated.
+     *
+     * @param model The model to hold user attributes.
+     * @return The name of the profile view template.
+     */
     @GetMapping("/profile")
     public String profilePage(Model model) {
         Optional<UserAccount> optionalUserAccount = userService.getCurrentUser();
+
         if (optionalUserAccount.isPresent()) {
             model.addAttribute("user", optionalUserAccount.get());
         } else {
@@ -92,9 +122,16 @@ public class UserController {
         return "profile";
     }
 
+    /**
+     * Displays the contact page for the authenticated user, or redirects to login if not authenticated.
+     *
+     * @param model The model to hold user attributes.
+     * @return The name of the contact view template.
+     */
     @GetMapping("/contact")
     public String contactPage(Model model) {
         Optional<UserAccount> optionalUserAccount = userService.getCurrentUser();
+
         if (optionalUserAccount.isPresent()) {
             model.addAttribute("user", optionalUserAccount.get());
         } else {
@@ -103,6 +140,14 @@ public class UserController {
         return "contact";
     }
 
+    /**
+     * Updates the user's profile information with the provided first and last names.
+     *
+     * @param id The unique user ID.
+     * @param firstname The updated first name.
+     * @param lastname The updated last name.
+     * @return A redirect URL back to the profile page with a success or error query parameter.
+     */
     @PostMapping("/updateProfile")
     public String updateProfile(@RequestParam("id") long id,
                                 @RequestParam("firstname") String firstname,
@@ -115,6 +160,13 @@ public class UserController {
         }
     }
 
+    /**
+     * Adds funds to the user's account with the provided amount.
+     *
+     * @param id The unique user ID.
+     * @param amount The amount to be added to the account.
+     * @return A redirect URL back to the profile page with a success or error query parameter.
+     */
     @PostMapping("/addFunds")
     public String addFunds(@RequestParam("id") long id,
                            @RequestParam("amount") BigDecimal amount) {
@@ -126,26 +178,31 @@ public class UserController {
         }
     }
 
+    /**
+     * Adds a new friend connection for the authenticated user.
+     *
+     * @param id The unique user ID.
+     * @param email The email of the friend to be added.
+     * @return A redirect URL back to the profile page with a success or error query parameter.
+     */
     @PostMapping("/addFriend")
     public String addFriend(@RequestParam("id") long id,
                             @RequestParam("email") String email) {
-
-        UserAccount currentUser = null;
+        // Retrieve the currently authenticated user
         Optional<UserAccount> optionalUserAccount = userService.getCurrentUser();
-        if (optionalUserAccount.isPresent()) {
-            currentUser = optionalUserAccount.get();
-        } else {
+        if (!optionalUserAccount.isPresent()) {
             return "redirect:/login";
         }
+        UserAccount currentUser = optionalUserAccount.get();
 
-        UserAccount friend = null;
+        // Retrieve the friend's account by email
         Optional<UserAccount> optionalFriend = userRepository.findByEmail(email);
-        if (optionalFriend.isPresent()) {
-            friend = optionalFriend.get();
-        } else {
+        if (!optionalFriend.isPresent()) {
             return "redirect:/error";
         }
+        UserAccount friend = optionalFriend.get();
 
+        // Create the friend connection
         try {
             senderRecipientConnectionService.createConnection(currentUser, friend);
             return "redirect:/profile?success";
@@ -154,14 +211,24 @@ public class UserController {
         }
     }
 
+    /**
+     * Processes a payment to the specified recipient from the authenticated user's account.
+     *
+     * @param recipientIndex The index of the recipient in the user's connection list.
+     * @param amount The amount to be paid.
+     * @param redirectAttributes Attributes to store flash messages.
+     * @return A redirect URL back to the transfer page with a success or error message.
+     */
     @PostMapping("/pay")
     public String processPayment(@RequestParam("recipient") int recipientIndex,
                                  @RequestParam("amount") BigDecimal amount,
                                  RedirectAttributes redirectAttributes) {
+        // Retrieve the current authenticated user's email
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         Optional<UserAccount> optionalSender = userRepository.findByEmail(email);
 
+        // Redirect to login if the sender is not authenticated
         if (!optionalSender.isPresent()) {
             redirectAttributes.addFlashAttribute("error", "Invalid session or user not found.");
             return "redirect:/login";
@@ -170,6 +237,7 @@ public class UserController {
         UserAccount sender = optionalSender.get();
         List<UserAccount> recipients = senderRecipientConnectionRepository.findRecipientsBySenderId(sender.getId());
 
+        // Ensure the recipient index is within bounds
         if (recipientIndex < 0 || recipientIndex >= recipients.size()) {
             redirectAttributes.addFlashAttribute("error", "Invalid recipient.");
             return "redirect:/transfer";
@@ -177,12 +245,13 @@ public class UserController {
 
         UserAccount recipient = recipients.get(recipientIndex);
 
+        // Create the transaction and process payment
         try {
             Transaction transaction = Transaction.builder()
                     .sender(sender)
                     .recipient(recipient)
                     .amount(amount)
-                    .date( LocalDateTime.now())
+                    .date(LocalDateTime.now())
                     .description("Transfer from " + sender.getEmail() + " to " + recipient.getEmail())
                     .build();
 
@@ -196,6 +265,13 @@ public class UserController {
         return "redirect:/transfer";
     }
 
+    /**
+     * Handles a withdrawal request for the authenticated user.
+     *
+     * @param iban The IBAN of the account where the funds will be withdrawn.
+     * @param amount The amount to withdraw from the user's balance.
+     * @return A redirect URL back to the home page with a success or error query parameter.
+     */
     @PostMapping("/withdraw")
     public String handleWithdraw(@RequestParam String iban, @RequestParam BigDecimal amount) {
         try {
