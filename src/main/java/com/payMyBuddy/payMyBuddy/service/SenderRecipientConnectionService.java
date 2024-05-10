@@ -57,18 +57,36 @@ public class SenderRecipientConnectionService {
         }
     }
 
+    /**
+     * Checks if a connection already exists between a sender and a recipient.
+     *
+     * @param sender The sender's user account.
+     * @param recipient The recipient's user account.
+     * @return {@code true} if a connection exists, {@code false} otherwise.
+     */
     private boolean connectionExists(UserAccount sender, UserAccount recipient) {
         return senderRecipientConnectionRepository.findBySenderAndRecipient(sender, recipient).isPresent();
     }
 
+    /**
+     * Retrieves a list of recipients connected to the provided user's account.
+     * Validates the user ID before attempting to fetch connections from the repository.
+     *
+     * @param userRelation The user account whose connections are to be retrieved.
+     * @return A list of strings describing the connected recipients' details.
+     * @throws IllegalArgumentException if the user ID is invalid.
+     */
     public List<String> getConnection(UserAccount userRelation) {
+        // Validate that the user ID is not null and positive
         Utils.validateUserId(userRelation.getId());
 
+        // Fetch the list of recipient accounts connected to the specified sender ID
         List<UserAccount> users = senderRecipientConnectionRepository.findRecipientsBySenderId(userRelation.getId());
 
+        // Construct a list of formatted strings representing the connected recipients
         List<String> connections = new ArrayList<>();
         for (UserAccount user : users) {
-            String userDetails = "email : " + user.getEmail() + ", " + user.getFirstName() + " " + user.getLastName();
+            String userDetails = "email: " + user.getEmail() + ", " + user.getFirstName() + " " + user.getLastName();
             connections.add(userDetails);
         }
 

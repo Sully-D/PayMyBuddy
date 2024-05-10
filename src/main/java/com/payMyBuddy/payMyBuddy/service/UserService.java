@@ -103,41 +103,83 @@ public class UserService {
         userRepository.updateUser(id, firstName, lastName);
     }
 
+    /**
+     * Retrieves the currently authenticated user account from the security context.
+     * This method assumes that the user is authenticated and their email is valid.
+     *
+     * @return An Optional containing the authenticated user's account, or empty if not found.
+     * @throws IllegalStateException if no user is currently authenticated.
+     */
     @Transactional
     public Optional<UserAccount> getCurrentUser() {
+        // Get the current authentication context
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Check if the user is authenticated
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalStateException("No user currently authenticated");
         }
+
+        // Retrieve the username from the authentication context
         String username = authentication.getName();
+
+        // Fetch the user account associated with the username (email)
         return userRepository.findByEmail(username);
     }
 
+    /**
+     * Adds a specified amount of funds to the user's account with the given ID.
+     *
+     * @param id The unique ID of the user to whom the funds will be added.
+     * @param amount The amount to be added, which must be a positive value.
+     * @throws IllegalArgumentException if the user ID is zero or negative, or if the amount is invalid.
+     */
     @Transactional
     public void addFund(long id, BigDecimal amount) {
+        // Validate that the user ID is positive
         if (id <= 0) {
             throw new IllegalArgumentException("User ID must be greater than zero.");
         }
+
+        // Validate the provided amount
         Utils.valideAmount(amount);
 
+        // Add the funds to the user account through the repository
         userRepository.addFund(id, amount);
     }
 
+    /**
+     * Withdraws a specified amount from the currently authenticated user's account.
+     * Ensures the user has sufficient balance and that the amount is valid.
+     *
+     * @param amount The amount to withdraw, which must be a positive value.
+     * @param iban The International Bank Account Number for the withdrawal.
+     * @throws IllegalArgumentException if the amount is invalid or if the user lacks sufficient balance.
+     * @throws UserNotFoundException if the current user cannot be retrieved or is not authenticated.
+     */
     @Transactional
     public void withdraw(BigDecimal amount, String iban) {
+        // Validate the amount to be withdrawn
         Utils.valideAmount(amount);
 
+        // Retrieve the currently authenticated user
         Optional<UserAccount> user = getCurrentUser();
         if (user.isEmpty()) {
             throw new UserNotFoundException("Invalid user or user not connected");
         }
+
+        // Retrieve the user's account object
         UserAccount currentUser = user.get();
 
+        // Check for sufficient funds
         if (currentUser.getBalance().compareTo(amount) < 0) {
             throw new IllegalArgumentException("Insufficient funds");
         }
+
+        // Deduct the amount from the user's balance
         currentUser.setBalance(currentUser.getBalance().subtract(amount));
 
+        // Save the updated user balance to the repository
         userRepository.save(currentUser);
     }
 

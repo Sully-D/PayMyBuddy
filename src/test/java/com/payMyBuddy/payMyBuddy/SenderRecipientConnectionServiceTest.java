@@ -222,8 +222,8 @@ public class SenderRecipientConnectionServiceTest {
         // Then
         assertNotNull(connections);
         assertEquals(2, connections.size());
-        assertTrue(connections.contains("email : jane.doe@test.com, Jane Doe"));
-        assertTrue(connections.contains("email : jean.doe@test.com, Jean Doe"));
+        assertTrue(connections.contains("email: jane.doe@test.com, Jane Doe"));
+        assertTrue(connections.contains("email: jean.doe@test.com, Jean Doe"));
         verify(senderRecipientConnectionRepository).findRecipientsBySenderId(newUserJohn.getId());
 
 //        Optional<List<UserAccount>> johnConnections = Optional.of(friends);

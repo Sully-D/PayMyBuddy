@@ -77,10 +77,20 @@ public class Utils {
         }
     }
 
+    /**
+     * Validates that a given amount is not null and greater than zero.
+     * This method is used to ensure that monetary values are positive before processing.
+     *
+     * @param amount The BigDecimal value representing the amount to be validated.
+     * @throws IllegalArgumentException if the amount is {@code null} or not greater than zero.
+     */
     public static void valideAmount(BigDecimal amount) {
+        // Check if the amount is null
         if (amount == null) {
             throw new IllegalArgumentException("Amount cannot be null.");
         }
+
+        // Check if the amount is positive
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Amount must be greater than zero.");
         }
